@@ -1,12 +1,12 @@
-import java.util.Date;
+import java.time.LocalDate;
 
 public class TodoItem {
-    String title, description, category;
-    Date startDate, endDate;
+    String title,description,category;
+    LocalDate startDate,endDate;
     Boolean isFavorite;
     Priorities priority;
 
-    public TodoItem(String title, String description, String category, Date startDate, Date endDate, Boolean isFavorite, Priorities priority) {
+    public TodoItem(String title, String description, String category, LocalDate startDate, LocalDate endDate, Boolean isFavorite, Priorities priority) {
         this.title = title;
         this.description = description;
         this.category = category;
@@ -40,19 +40,19 @@ public class TodoItem {
         this.category = category;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
@@ -70,18 +70,5 @@ public class TodoItem {
 
     public void setPriority(Priorities priority) {
         this.priority = priority;
-    }
-
-    @Override
-    public String toString() {
-        return "{" +
-                title + '\n' +
-                ", " + description + '\n' +
-                "," + category + '\n' +
-                "," + startDate.toString() + '\n' +
-                "," + endDate.toString() + '\n' +
-                "," + isFavorite.toString() + '\n' +
-                "," + priority.toString() + '\n' +
-                "} \n";
     }
 }
