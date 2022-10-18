@@ -21,7 +21,7 @@ public class FileHandler {
 
     public StringBuilder readFromFile() throws FileNotFoundException {
 
-        StringBuilder fileResult = null;
+        StringBuilder fileResult = new StringBuilder();
         File file = new File(fileLocation);
 
         Scanner scannerObj = new Scanner(file);
