@@ -82,6 +82,6 @@ public class TodoItem {
                 "," + endDate + '\n' +
                 "," + isFavorite + '\n' +
                 "," + priority + '\n' +
-                '}';
+                "} \n";
     }
 }
