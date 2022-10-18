@@ -1,8 +1,8 @@
 import java.util.Date;
 
 public class TodoItem {
-    String title,description,category;
-    Date startDate,endDate;
+    String title, description, category;
+    Date startDate, endDate;
     Boolean isFavorite;
     Priorities priority;
 
@@ -70,5 +70,18 @@ public class TodoItem {
 
     public void setPriority(Priorities priority) {
         this.priority = priority;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                title + '\n' +
+                ", " + description + '\n' +
+                "," + category + '\n' +
+                "," + startDate + '\n' +
+                "," + endDate + '\n' +
+                "," + isFavorite + '\n' +
+                "," + priority + '\n' +
+                '}';
     }
 }
