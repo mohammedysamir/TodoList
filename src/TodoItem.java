@@ -78,10 +78,10 @@ public class TodoItem {
                 title + '\n' +
                 ", " + description + '\n' +
                 "," + category + '\n' +
-                "," + startDate + '\n' +
-                "," + endDate + '\n' +
-                "," + isFavorite + '\n' +
-                "," + priority + '\n' +
+                "," + startDate.toString() + '\n' +
+                "," + endDate.toString() + '\n' +
+                "," + isFavorite.toString() + '\n' +
+                "," + priority.toString() + '\n' +
                 "} \n";
     }
 }
