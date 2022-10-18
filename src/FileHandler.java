@@ -37,31 +37,34 @@ public class FileHandler {
     }
 
     public void writeToFile(HashMap<String, TodoItem> listItem) throws IOException {
+        StringBuilder result= new StringBuilder();
         for (TodoItem todo : listItem.values()) {
             String json = todo.toString();
-            Files.writeString(Path.of(fileLocation), json);
+            result.append(json);
         }
+        Files.writeString(Path.of(fileLocation), result.toString());
     }
 
 
-    public Map<String,TodoItem> parseItems() throws FileNotFoundException {
+    public Map<String, TodoItem> parseItems() throws FileNotFoundException {
         StringBuilder result = readFromFile();
-        String[] items = result.toString().split("\\{?.+\\}?"); //todo: test splitting
+        String[] items = result.toString().split("}");//match using closing-curly bracket
 
-        Map<String,TodoItem> todos = new HashMap<>();
+        Map<String, TodoItem> todos = new HashMap<>();
 
         //iterate through each item
         for (String item : items) {
+            item = item.substring(1);//to remove open curly bracket.
             String[] itemDetails = item.split(",");
-            Priorities priorities=Priorities.LOW;
+            Priorities priorities = Priorities.LOW;
 
-            switch (itemDetails[6]){
-                case "HIGH": priorities = Priorities.HIGH;
-                break;
-                case "MEDIUM": priorities = Priorities.MEDIUM;
-                break;
-                default: priorities = Priorities.LOW;
-                break;
+            switch (itemDetails[6]) {
+                case "HIGH":
+                    priorities = Priorities.HIGH;
+                    break;
+                case "MEDIUM":
+                    priorities = Priorities.MEDIUM;
+                    break;
             }
 
             TodoItem objTodoItem = new TodoItem(itemDetails[0],
@@ -69,10 +72,10 @@ public class FileHandler {
                     itemDetails[2],
                     LocalDate.parse(itemDetails[3]),
                     LocalDate.parse(itemDetails[4]),
-                    itemDetails[5].equalsIgnoreCase("true")?true:false,
+                    itemDetails[5].equalsIgnoreCase("true"),
                     priorities);
             //add items to map
-            todos.put(objTodoItem.getTitle(),objTodoItem);
+            todos.put(objTodoItem.getTitle(), objTodoItem);
         }
 
         return todos;
