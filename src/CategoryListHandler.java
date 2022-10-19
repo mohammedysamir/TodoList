@@ -20,6 +20,15 @@ public class CategoryListHandler {
         categories.add(category);
     }
 
+    public void viewCategories() {
+        for (int i = 0; i < categories.size(); i++)
+            System.out.println(String.format("%d: %s", i + 1, categories.indexOf(i)));
+    }
+
+    public String getCategoryAtIndex(int index) {
+        return categories.get(index);
+    }
+
     public boolean isCategoryFound(String category) {
         return categories.contains(category);
     }

@@ -4,10 +4,12 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
+    FileHandler fileHandler = new FileHandler();
+    static CategoryListHandler categoryList;
     public static void main(String[] args) throws FileNotFoundException {
         final String filePath = "todos";
         String userAnswer = "";
-        FileHandler fileHandler = new FileHandler(filePath);
+       categoryList= new CategoryListHandler();
         String title;
         Scanner scan = new Scanner(System.in);
         do {
@@ -133,8 +135,10 @@ public class Main {
         String title = scan.nextLine().trim();
         System.out.print("\nEnter todo description: ");
         String description = scan.nextLine().trim();
-        System.out.print("\nEnter todo Category: ");
-        String category = scan.nextLine().trim();
+        categoryList.viewCategories();
+        System.out.print("\nEnter todo Category number: ");
+        int categoryIndex = scan.nextInt();
+        String category = categoryList.getCategoryAtIndex(categoryIndex);
         System.out.print("\nEnter todo Start date with format 'yyyy-mm-dd': ");
         LocalDate startDate = LocalDate.parse(scan.nextLine().trim());
         System.out.print("\nEnter todo End date with format 'yyyy-mm-dd': ");
