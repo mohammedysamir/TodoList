@@ -15,33 +15,7 @@ public class Main {
             int choice = scan.nextInt();
             switch (choice) {
                 case 1: //insert new item
-                    //simple version of input taking
-                    System.out.print("Enter todo title: ");
-                    title = scan.nextLine();
-                    System.out.print("\nEnter todo description: ");
-                    description = scan.nextLine();
-                    System.out.print("\nEnter todo Category: ");
-                    category = scan.nextLine();
-                    System.out.print("\nEnter todo Start date with format 'yyyy-mm-dd': ");
-                    LocalDate startDate = LocalDate.parse(scan.nextLine());
-                    System.out.print("\nEnter todo End date with format 'yyyy-mm-dd': ");
-                    LocalDate endDate = LocalDate.parse(scan.nextLine());
-                    System.out.print("\nis this todo Favorite? (Y/N): ");
-                    Boolean isFavorite = scan.nextLine().equalsIgnoreCase("Y");
-                    System.out.print("\nEnter todo priority:- 1 = HIGH, 2 = MEDIUM, 3 = LOW ");
-                    Priorities priority = Priorities.LOW;
-                    switch (scan.nextInt()) {
-                        case 1:
-                            priority = Priorities.HIGH;
-                            break;
-                        case 2:
-                            priority = Priorities.MEDIUM;
-                            break;
-                        case 3:
-                            break;
-                    }
-                    //create obj from inputs
-                    TodoItem item = new TodoItem(title, description, category, startDate, endDate, isFavorite, priority);
+                    parseUserInputs(scan);
                     //todo: call Manager's function to insert item into Map
                     break;
                 case 2: //update existing item
@@ -125,9 +99,11 @@ public class Main {
             System.out.print("Do you wish to continue?: ");
             //take user input to terminate the app
             userAnswer = scan.nextLine();
-            scan.nextLine(); //to accept any extra space
-        } while (!(userAnswer.equalsIgnoreCase("Y") ||
-                userAnswer.equalsIgnoreCase("Yes")));
+            scan.nextLine();
+        } while (userAnswer.equalsIgnoreCase("Y") ||
+                userAnswer.equalsIgnoreCase("Yes"));
+        //todo: don't forget to save map to file
+        scan.close();
         System.out.println("Thanks for using our application");
     }
 
@@ -146,6 +122,37 @@ public class Main {
                         "\n9. Search by item's priority." +
                         "\n10. Add Todo item to Category." +
                         "\n11. Add Todo item to Favorite.");
+    }
+
+    public static TodoItem parseUserInputs(Scanner scan) {
+        //simple version of input taking
+        scan.nextLine();
+        System.out.print("Enter todo title: ");
+        String title = scan.nextLine().trim();
+        System.out.print("\nEnter todo description: ");
+        String description = scan.nextLine().trim();
+        System.out.print("\nEnter todo Category: ");
+        String category = scan.nextLine().trim();
+        System.out.print("\nEnter todo Start date with format 'yyyy-mm-dd': ");
+        LocalDate startDate = LocalDate.parse(scan.nextLine().trim());
+        System.out.print("\nEnter todo End date with format 'yyyy-mm-dd': ");
+        LocalDate endDate = LocalDate.parse(scan.nextLine().trim());
+        System.out.print("\nis this todo Favorite? (Y/N): ");
+        Boolean isFavorite = scan.nextLine().trim().equalsIgnoreCase("Y");
+        System.out.print("\nEnter todo priority:- 1 = HIGH, 2 = MEDIUM, 3 = LOW ");
+        Priorities priority = Priorities.LOW;
+        switch (scan.nextInt()) {
+            case 1:
+                priority = Priorities.HIGH;
+                break;
+            case 2:
+                priority = Priorities.MEDIUM;
+                break;
+            case 3:
+                break;
+        }
+        //create obj from inputs
+        return new TodoItem(title, description, category, startDate, endDate, isFavorite, priority);
     }
 
     public static void printCollection(HashMap<String, TodoItem> map) {
