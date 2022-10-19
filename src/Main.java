@@ -5,12 +5,13 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
-    FileHandler fileHandler = new FileHandler();
+    static FileHandler fileHandler = new FileHandler();
     static CategoryListHandler categoryList;
 
     public static void main(String[] args) throws IOException {
         final String filePath = "todos";
         String userAnswer = "";
+        TodoManager manager = new TodoManager((HashMap<String, TodoItem>) fileHandler.parseItems(filePath));
         categoryList = new CategoryListHandler();
         String title;
         Scanner scan = new Scanner(System.in);
@@ -19,24 +20,24 @@ public class Main {
             int choice = scan.nextInt();
             switch (choice) {
                 case 1: //insert new item
-                    parseUserInputs(scan);
-                    //todo: call Manager's function to insert item into Map
+                    manager.insertTodo(parseUserInputs(scan));
                     break;
                 case 2: //update existing item
                     System.out.print("Enter todo item's title to be updated: ");
                     title = scan.nextLine();
                     scan.nextLine();
-                    //todo: call TaskManager's update function
+                    manager.updateTodo(manager.searchByTitle(title));
+                    //todo: test
                     break;
                 case 3: //delete existing item
                     System.out.print("Enter todo item's title to be deleted: ");
                     title = scan.nextLine();
                     scan.nextLine();
-                    //todo: call TaskManager's delete function
+                    manager.deleteTodo(title);
                     break;
                 case 4: //print all todos from TaskManager's map
                     System.out.println("**Fetching all items**");
-                    //todo: call selectAll() and pass it as argument to printCollection()
+                    printCollection(manager.selectAll());
                     break;
                 case 5: //nearest by end date
                     //todo: call selectNearest() and pass it as argument to printCollection()
@@ -46,7 +47,7 @@ public class Main {
                     title = scan.nextLine();
                     System.out.println();
                     scan.nextLine();
-                    //todo: call searchByTitle and call toString to outcome
+                    System.out.println(manager.searchByTitle(title).toString());
                     break;
                 case 7: //search by start date
                     System.out.print("Enter start date with format 'yyyy-mm-dd': ");
@@ -69,15 +70,15 @@ public class Main {
                     switch (priorityLevel) {
                         case 1:
                             System.out.println("**Showing items of low priority**");
-                            //todo: call function to search for low priority
+                            resultMap = manager.searchByPriority(Priorities.LOW);
                             break;
                         case 2:
                             System.out.println("**Showing items of medium priority**");
-                            //todo: call function to search for medium priority
+                            resultMap = manager.searchByPriority(Priorities.MEDIUM);
                             break;
                         case 3:
                             System.out.println("**Showing items of high priority**");
-                            //todo: call function to search for high priority
+                            resultMap = manager.searchByPriority(Priorities.HIGH);
                             break;
                     }
                     printCollection(resultMap);
@@ -94,7 +95,7 @@ public class Main {
                     System.out.print("Enter item's title to move it to favorite: ");
                     title = scan.nextLine();
                     System.out.println("");
-                    //todo: call function on given title to toggle its favorite boolean
+                    manager.addToFavorite(title);
                     break;
                 default:
                     System.out.println("Invalid choice entered");
@@ -106,8 +107,8 @@ public class Main {
             scan.nextLine();
         } while (userAnswer.equalsIgnoreCase("Y") ||
                 userAnswer.equalsIgnoreCase("Yes"));
-        //todo: don't forget to save map to file
         scan.close();
+        fileHandler.writeToFile(manager.selectAll(), filePath); //write final map to file
         System.out.println("Thanks for using our application");
     }
 
@@ -149,7 +150,7 @@ public class Main {
                 System.out.println("Invalid category selected, re-enter category number");
                 categoryIndex = Integer.parseInt(scan.nextLine());
             }
-            category = categoryList.getCategoryAtIndex(categoryIndex-1); //position-index different
+            category = categoryList.getCategoryAtIndex(categoryIndex - 1); //position-index different
             scan.nextLine();
         } else {
             //entered category name
