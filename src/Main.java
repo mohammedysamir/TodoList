@@ -1,4 +1,5 @@
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -6,10 +7,11 @@ import java.util.Scanner;
 public class Main {
     FileHandler fileHandler = new FileHandler();
     static CategoryListHandler categoryList;
-    public static void main(String[] args) throws FileNotFoundException {
+
+    public static void main(String[] args) throws IOException {
         final String filePath = "todos";
         String userAnswer = "";
-       categoryList= new CategoryListHandler();
+        categoryList = new CategoryListHandler();
         String title;
         Scanner scan = new Scanner(System.in);
         do {
@@ -111,7 +113,7 @@ public class Main {
 
     //util functions
     public static void displayMenu() {
-        System.out.println(
+        System.out.print(
                 "***********************************************" +
                         "\nSelect number of request:" +
                         "\n1. Add Todo item." +
@@ -125,10 +127,11 @@ public class Main {
                         "\n9. Search by item's priority." +
                         "\n10. Add Todo item to Category." +
                         "\n11. Add Todo item to Favorite." +
-                        "\n***********************************************");
+                        "\n***********************************************" +
+                        "\nchoice: ");
     }
 
-    public static TodoItem parseUserInputs(Scanner scan) {
+    public static TodoItem parseUserInputs(Scanner scan) throws IOException {
         //simple version of input taking
         scan.nextLine();
         System.out.print("Enter todo title: ");
@@ -136,9 +139,30 @@ public class Main {
         System.out.print("\nEnter todo description: ");
         String description = scan.nextLine().trim();
         categoryList.viewCategories();
-        System.out.print("\nEnter todo Category number: ");
-        int categoryIndex = scan.nextInt();
-        String category = categoryList.getCategoryAtIndex(categoryIndex);
+        System.out.print("\nEnter todo Category number, or enter new category name: ");
+        String category = "";
+        if (scan.hasNextInt()) //check if next input is an integer
+        {
+            int categoryIndex = Integer.parseInt(scan.nextLine());
+            //check if index is out of bound
+            while (categoryIndex > categoryList.categories.size()) {
+                System.out.println("Invalid category selected, re-enter category number");
+                categoryIndex = Integer.parseInt(scan.nextLine());
+            }
+            category = categoryList.getCategoryAtIndex(categoryIndex-1); //position-index different
+            scan.nextLine();
+        } else {
+            //entered category name
+            //search if exists
+            String tempCategory = scan.nextLine().trim();
+            if (!categoryList.isCategoryFound(tempCategory))//new category to be added
+            {
+                categoryList.addCategory(tempCategory);
+                categoryList.writeCategoriesToFile(); //write to file
+            }
+            category = tempCategory;
+        }
+
         System.out.print("\nEnter todo Start date with format 'yyyy-mm-dd': ");
         LocalDate startDate = LocalDate.parse(scan.nextLine().trim());
         System.out.print("\nEnter todo End date with format 'yyyy-mm-dd': ");
