@@ -10,16 +10,7 @@ import java.util.Scanner;
 
 public class FileHandler {
 
-    String fileLocation;
-
-    public FileHandler(String fileLocation) {
-
-        this.fileLocation = fileLocation;
-
-    }
-
-
-    public StringBuilder readFromFile() throws FileNotFoundException {
+    public StringBuilder readFromFile(String fileLocation) throws FileNotFoundException {
 
         StringBuilder fileResult = new StringBuilder();
         File file = new File(fileLocation);
@@ -36,7 +27,7 @@ public class FileHandler {
         return fileResult;
     }
 
-    public void writeToFile(HashMap<String, TodoItem> listItem) throws IOException {
+    public void writeToFile(HashMap<String, TodoItem> listItem,String fileLocation) throws IOException {
         StringBuilder result= new StringBuilder();
         for (TodoItem todo : listItem.values()) {
             String json = todo.toString();
@@ -46,8 +37,8 @@ public class FileHandler {
     }
 
 
-    public Map<String, TodoItem> parseItems() throws FileNotFoundException {
-        StringBuilder result = readFromFile();
+    public Map<String, TodoItem> parseItems(String fileLocation) throws FileNotFoundException {
+        StringBuilder result = readFromFile(fileLocation);
         String[] items = result.toString().split("}");//match using closing-curly bracket
 
         Map<String, TodoItem> todos = new HashMap<>();
