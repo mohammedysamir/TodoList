@@ -22,7 +22,7 @@ public class CategoryListHandler {
 
     public void viewCategories() {
         for (int i = 0; i < categories.size(); i++)
-            System.out.println(String.format("%d: %s", i + 1, categories.indexOf(i)));
+            System.out.println(String.format("%d: %s", i + 1, categories.get(i)));
     }
 
     public String getCategoryAtIndex(int index) {
@@ -34,13 +34,13 @@ public class CategoryListHandler {
     }
 
     private ArrayList<String> parseCategories(String categoriesString) {
-        return (ArrayList<String>) Arrays.asList(categoriesString.split("\r\n"));
+        return new ArrayList<>(Arrays.asList(categoriesString.split(",")));
     }
 
     public void writeCategoriesToFile() throws IOException {
         StringBuilder result = new StringBuilder();
         for (String category : categories)
-            result.append(category + "\n");
+            result.append(category + ",\n");
         Files.writeString(Path.of(categoriesPath), result.toString());
     }
 
