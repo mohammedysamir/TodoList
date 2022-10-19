@@ -8,7 +8,7 @@ public class Main {
         final String filePath = "todos";
         String userAnswer = "";
         FileHandler fileHandler = new FileHandler(filePath);
-        String title, description, category;
+        String title;
         Scanner scan = new Scanner(System.in);
         do {
             displayMenu();
@@ -82,7 +82,7 @@ public class Main {
                     System.out.print("Enter todo title to update its category: ");
                     title = scan.nextLine();
                     System.out.print("\nEnter todo category: ");
-                    category = scan.nextLine();
+                    String category = scan.nextLine();
                     System.out.println("");
                     //todo: create function to update todo category by title and call it
                     break;
@@ -110,7 +110,8 @@ public class Main {
     //util functions
     public static void displayMenu() {
         System.out.println(
-                "Select number of request:" +
+                "***********************************************" +
+                        "\nSelect number of request:" +
                         "\n1. Add Todo item." +
                         "\n2. Update Todo item." +
                         "\n3. Delete Todo item." +
@@ -121,7 +122,8 @@ public class Main {
                         "\n8. Search by End date." +
                         "\n9. Search by item's priority." +
                         "\n10. Add Todo item to Category." +
-                        "\n11. Add Todo item to Favorite.");
+                        "\n11. Add Todo item to Favorite." +
+                        "\n***********************************************");
     }
 
     public static TodoItem parseUserInputs(Scanner scan) {
