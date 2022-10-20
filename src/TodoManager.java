@@ -4,13 +4,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class TodoManager
-{
+public class TodoManager {
     private HashMap<String, TodoItem> map;
 
     public TodoManager(HashMap<String, TodoItem> map) {
         this.map = map;
     }
+
     public boolean validateItem(TodoItem item) {
         return item.isFavorite != null && item.endDate != null && item.category != null
                 && item.startDate != null && item.priority != null;
@@ -42,33 +42,7 @@ public class TodoManager
         return this.map;
     }
 
-    public HashMap<String, TodoItem> selectNearestbyDate1() {
-        String[] result = new String[5];
-        HashMap<String, Long> tempMap = new HashMap<>();
-        LocalDate date = LocalDate.now();
-        for (Map.Entry<String, TodoItem> set : this.map.entrySet()) {
-            tempMap.put(set.getKey(), date.toEpochDay() - set.getValue().startDate.toEpochDay());
-        }
-        int i = 0;
-        for (Map.Entry<String, Long> set : tempMap.entrySet()) {
-            Long min = Collections.min(tempMap.values());
-            if (i == 5) break;
-            if (set.getValue() == min) {
-                result[i] = set.getKey();
-                tempMap.remove(set.getKey());
-                i++;
-            }
-        }
-        HashMap<String, TodoItem> finalResult=new HashMap<>();
-        for (Map.Entry<String, TodoItem> set : this.map.entrySet()) {
-            if( Arrays.stream(result).anyMatch(set.getKey()::equals)){
-                finalResult.put(set.getKey(), set.getValue());
-            }
-        }
-            return finalResult;
-    }
-
-    public ArrayList<TodoItem> selectNearestbyDate(){
+    public HashMap<String, TodoItem> selectNearestByDate() {
         ArrayList<TodoItem> sorted = new ArrayList<>(this.map.values());
 
         sorted.sort(new Comparator<TodoItem>() {
@@ -77,26 +51,10 @@ public class TodoManager
                 return o1.getStartDate().compareTo(o2.getStartDate());
             }
         });
-        return sorted;
-    }
-
-    public HashMap<String, Long> selectNearestbyDate2() {
-        HashMap<String, Long> tempMap = new HashMap<>();
-        LocalDate date = LocalDate.now();
-        for (Map.Entry<String, TodoItem> set : this.map.entrySet()) {
-            tempMap.put(set.getKey(), date.toEpochDay() - set.getValue().startDate.toEpochDay());
-        }
-        int i = 0;
-        for (Map.Entry<String, Long> set : tempMap.entrySet()) {
-            Long min = Collections.min(tempMap.values());
-            if (i == 5) break;
-            if (set.getValue() != min) {
-                tempMap.remove(set.getKey());
-            }else{
-                i++;
-            }
-        }
-        return tempMap;
+        HashMap<String, TodoItem> sortedMap = new HashMap<>(); //done to make all outputs consistent
+        for (TodoItem item : sorted)
+            sortedMap.put(item.getTitle(), item);
+        return sortedMap;
     }
 
     public HashMap<String, TodoItem> searchByPriority(Priorities Priority) {
@@ -160,4 +118,5 @@ public class TodoManager
             return item;
         }
         return null;
-    }}
+    }
+}
