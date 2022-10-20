@@ -27,17 +27,19 @@ public class Main {
                     break;
                 case 2: //update existing item
                     System.out.print("Enter todo item's title to be updated: ");
-                    title = scan.nextLine();
                     scan.nextLine();
-                    if (manager.updateTodo(manager.searchByTitle(title)))
+                    title = scan.nextLine();
+                    if (manager.searchByTitle(title) != null) {
+                        TodoItem updatedItem = parseUserInputs(scan);
+                        manager.updateTodo(title, updatedItem);
                         System.out.println("Todo item has been updated successfully!");
-                    else
+                    } else
                         System.out.println("Todo item isn't exist, operation rejected!\n**try to insert it instead**");
                     break;
                 case 3: //delete existing item
                     System.out.print("Enter todo item's title to be deleted: ");
-                    title = scan.nextLine();
                     scan.nextLine();
+                    title = scan.nextLine();
                     if (manager.deleteTodo(title))
                         System.out.println("Todo item has been deleted successfully!");
                     else
@@ -52,13 +54,14 @@ public class Main {
                     break;
                 case 6: //search by title
                     System.out.print("Enter todo item's title to search for: ");
+                    scan.nextLine();
                     title = scan.nextLine();
                     System.out.println();
-                    scan.nextLine();
                     System.out.println(manager.searchByTitle(title).toString());
                     break;
                 case 7: //search by start date
                     System.out.print("Enter start date with format 'yyyy-mm-dd': ");
+                    scan.nextLine();
                     String dateStr = scan.nextLine();
                     System.out.println();
                     LocalDate date = LocalDate.parse(dateStr);
@@ -66,6 +69,7 @@ public class Main {
                     break;
                 case 8: //search by end date
                     System.out.print("Enter end date with format 'yyyy-mm-dd': ");
+                    scan.nextLine();
                     dateStr = scan.nextLine();
                     System.out.println();
                     date = LocalDate.parse(dateStr);
@@ -92,14 +96,16 @@ public class Main {
                     printCollection(resultMap);
                     break;
                 case 10: //add to category
+                    scan.nextLine();
                     System.out.print("Enter todo title to update its category: ");
                     title = scan.nextLine();
-                    System.out.print("\nEnter todo category: ");
-                    String category = scan.nextLine();
+//                    System.out.print("\nEnter todo category: ");
+                    String category = categoryHandling(scan);
                     System.out.println("");
                     manager.updateCategory(category, manager.searchByTitle(title));
                     break;
                 case 11: //add to favorite
+                    scan.nextLine();
                     System.out.print("Enter item's title to move it to favorite: ");
                     title = scan.nextLine();
                     System.out.println("");
@@ -112,10 +118,10 @@ public class Main {
                     System.out.println("Invalid choice entered");
                     break;
             }
+            scan.nextLine();
             System.out.print("Do you wish to continue?: ");
             //take user input to terminate the app
             userAnswer = scan.nextLine();
-            scan.nextLine();
         } while (userAnswer.equalsIgnoreCase("Y") ||
                 userAnswer.equalsIgnoreCase("Yes"));
         scan.close();
@@ -150,9 +156,33 @@ public class Main {
         String title = scan.nextLine().trim();
         System.out.print("\nEnter todo description: ");
         String description = scan.nextLine().trim();
+        String category = categoryHandling(scan);
+        System.out.print("\nEnter todo Start date with format 'yyyy-mm-dd': ");
+        LocalDate startDate = LocalDate.parse(scan.nextLine().trim());
+        System.out.print("\nEnter todo End date with format 'yyyy-mm-dd': ");
+        LocalDate endDate = LocalDate.parse(scan.nextLine().trim());
+        System.out.print("\nis this todo Favorite? (Y/N): ");
+        Boolean isFavorite = scan.nextLine().trim().equalsIgnoreCase("Y");
+        System.out.print("\nEnter todo priority:- 1 = HIGH, 2 = MEDIUM, 3 = LOW ");
+        Priorities priority = Priorities.LOW;
+        switch (scan.nextInt()) {
+            case 1:
+                priority = Priorities.HIGH;
+                break;
+            case 2:
+                priority = Priorities.MEDIUM;
+                break;
+            case 3:
+                break;
+        }
+        //create obj from inputs
+        return new TodoItem(title, description, category, startDate, endDate, isFavorite, priority);
+    }
+
+    private static String categoryHandling(Scanner scan) throws IOException {
+        String category;
+        System.out.print("\nEnter todo Category number, or enter new category name:\n");
         categoryList.viewCategories();
-        System.out.print("\nEnter todo Category number, or enter new category name: ");
-        String category = "";
         if (scan.hasNextInt()) //check if next input is an integer
         {
             int categoryIndex = Integer.parseInt(scan.nextLine());
@@ -174,27 +204,7 @@ public class Main {
             }
             category = tempCategory;
         }
-
-        System.out.print("\nEnter todo Start date with format 'yyyy-mm-dd': ");
-        LocalDate startDate = LocalDate.parse(scan.nextLine().trim());
-        System.out.print("\nEnter todo End date with format 'yyyy-mm-dd': ");
-        LocalDate endDate = LocalDate.parse(scan.nextLine().trim());
-        System.out.print("\nis this todo Favorite? (Y/N): ");
-        Boolean isFavorite = scan.nextLine().trim().equalsIgnoreCase("Y");
-        System.out.print("\nEnter todo priority:- 1 = HIGH, 2 = MEDIUM, 3 = LOW ");
-        Priorities priority = Priorities.LOW;
-        switch (scan.nextInt()) {
-            case 1:
-                priority = Priorities.HIGH;
-                break;
-            case 2:
-                priority = Priorities.MEDIUM;
-                break;
-            case 3:
-                break;
-        }
-        //create obj from inputs
-        return new TodoItem(title, description, category, startDate, endDate, isFavorite, priority);
+        return category;
     }
 
     public static void printCollection(HashMap<String, TodoItem> map) {
