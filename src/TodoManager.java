@@ -69,7 +69,7 @@ public class TodoManager
     }
 
     public ArrayList<TodoItem> selectNearestbyDate(){
-        ArrayList<TodoItem> sorted = new ArrayList<>(this.map.values())
+        ArrayList<TodoItem> sorted = new ArrayList<>(this.map.values());
 
         sorted.sort(new Comparator<TodoItem>() {
             @Override
