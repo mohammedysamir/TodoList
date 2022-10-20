@@ -26,9 +26,9 @@ public class TodoManager
         return true;
     }
 
-    public boolean updateTodo(TodoItem item) {
-        if (this.map.containsKey(item.getTitle())) {
-            this.map.put("title", new TodoItem(item.title, item.description, item.category, item.startDate, item.endDate, item.isFavorite, item.priority));
+    public boolean updateTodo(String title, TodoItem item) {
+        if (this.map.containsKey(title)) {
+            this.map.put(title, new TodoItem(item.title, item.description, item.category, item.startDate, item.endDate, item.isFavorite, item.priority));
             return true;
         }
         return false;
