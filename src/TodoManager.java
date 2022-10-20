@@ -52,8 +52,8 @@ public class TodoManager {
             }
         });
         HashMap<String, TodoItem> sortedMap = new HashMap<>(); //done to make all outputs consistent
-        for (TodoItem item : sorted)
-            sortedMap.put(item.getTitle(), item);
+        for (int i = 0; i < 5 && i < sorted.size(); i++)
+            sortedMap.put(sorted.get(i).getTitle(), sorted.get(i));
         return sortedMap;
     }
 
