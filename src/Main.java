@@ -27,7 +27,6 @@ public class Main {
                     title = scan.nextLine();
                     scan.nextLine();
                     manager.updateTodo(manager.searchByTitle(title));
-                    //todo: test
                     break;
                 case 3: //delete existing item
                     System.out.print("Enter todo item's title to be deleted: ");
@@ -54,14 +53,14 @@ public class Main {
                     String dateStr = scan.nextLine();
                     System.out.println();
                     LocalDate date = LocalDate.parse(dateStr);
-                    //todo: call function to fetch by start date and call printCollection on outcome
+                    printCollection(manager.searchByStartDate(date));
                     break;
                 case 8: //search by end date
                     System.out.print("Enter end date with format 'yyyy-mm-dd': ");
                     dateStr = scan.nextLine();
                     System.out.println();
                     date = LocalDate.parse(dateStr);
-                    //todo: call function to fetch by end date and call printCollection on outcome
+                    printCollection(manager.searchByEndDate(date));
                     break;
                 case 9: //search by priority
                     System.out.println("Select priority level to search for \n1:LOW\n2:MEDIUM\n3:HIGH");
@@ -89,7 +88,7 @@ public class Main {
                     System.out.print("\nEnter todo category: ");
                     String category = scan.nextLine();
                     System.out.println("");
-                    //todo: create function to update todo category by title and call it
+                    manager.updateCategory(category, manager.searchByTitle(title));
                     break;
                 case 11: //add to favorite
                     System.out.print("Enter item's title to move it to favorite: ");
