@@ -49,8 +49,8 @@ public class Main {
                     System.out.println("**Fetching all items**");
                     printCollection(manager.selectAll());
                     break;
-                case 5: //nearest by end date
-                    //todo: call selectNearest() and pass it as argument to printCollection()
+                case 5: //nearest by start date
+                    printCollection(manager.selectNearestByDate());
                     break;
                 case 6: //search by title
                     System.out.print("Enter todo item's title to search for: ");
@@ -99,7 +99,6 @@ public class Main {
                     scan.nextLine();
                     System.out.print("Enter todo title to update its category: ");
                     title = scan.nextLine();
-//                    System.out.print("\nEnter todo category: ");
                     String category = categoryHandling(scan);
                     System.out.println("");
                     manager.updateCategory(category, manager.searchByTitle(title));
@@ -138,7 +137,7 @@ public class Main {
                         "\n2. Update Todo item." +
                         "\n3. Delete Todo item." +
                         "\n4. Show all Todo items." +
-                        "\n5. Show 5 nearest items by date." +
+                        "\n5. Show 5 nearest items by start date." +
                         "\n6. Search by Title." +
                         "\n7. Search by Start date." +
                         "\n8. Search by End date." +
