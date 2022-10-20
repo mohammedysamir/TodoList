@@ -20,19 +20,28 @@ public class Main {
             int choice = scan.nextInt();
             switch (choice) {
                 case 1: //insert new item
-                    manager.insertTodo(parseUserInputs(scan));
+                    if (manager.insertTodo(parseUserInputs(scan)))
+                        System.out.println("Todo item has been inserted successfully!");
+                    else
+                        System.out.println("Todo item had been inserted before, operation rejected!\n**try to update existing todo**");
                     break;
                 case 2: //update existing item
                     System.out.print("Enter todo item's title to be updated: ");
                     title = scan.nextLine();
                     scan.nextLine();
-                    manager.updateTodo(manager.searchByTitle(title));
+                    if (manager.updateTodo(manager.searchByTitle(title)))
+                        System.out.println("Todo item has been updated successfully!");
+                    else
+                        System.out.println("Todo item isn't exist, operation rejected!\n**try to insert it instead**");
                     break;
                 case 3: //delete existing item
                     System.out.print("Enter todo item's title to be deleted: ");
                     title = scan.nextLine();
                     scan.nextLine();
-                    manager.deleteTodo(title);
+                    if (manager.deleteTodo(title))
+                        System.out.println("Todo item has been deleted successfully!");
+                    else
+                        System.out.println("There's no todo item with specified title, operation rejected!");
                     break;
                 case 4: //print all todos from TaskManager's map
                     System.out.println("**Fetching all items**");
@@ -94,7 +103,10 @@ public class Main {
                     System.out.print("Enter item's title to move it to favorite: ");
                     title = scan.nextLine();
                     System.out.println("");
-                    manager.addToFavorite(title);
+                    if (manager.addToFavorite(title))
+                        System.out.println("Todo item has been marked as **Favorite** successfully!");
+                    else
+                        System.out.println("There's no todo item with specified title, operation rejected!");
                     break;
                 default:
                     System.out.println("Invalid choice entered");
