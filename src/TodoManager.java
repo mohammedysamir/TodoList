@@ -1,6 +1,8 @@
+import javax.swing.*;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+
 
 public class TodoManager
 {
@@ -10,20 +12,12 @@ public class TodoManager
         this.map = map;
     }
     public boolean validateItem(TodoItem item) {
-        if (item.isFavorite instanceof Boolean ||
-                item.endDate instanceof LocalDate ||
-                item.category instanceof String ||
-                item.startDate instanceof LocalDate ||
-                item.priority instanceof Priorities) {
-            return item.isFavorite != null && item.endDate != null && item.category != null
-                    && item.startDate != null && item.priority != null;
-        } else {
-            return false;
-        }
+        return item.isFavorite != null && item.endDate != null && item.category != null
+                && item.startDate != null && item.priority != null;
     }
 
     public boolean insertTodo(TodoItem item) {
-        if (this.map.containsKey("title")) {
+        if (this.map.containsKey(item.getTitle())) {
             return false;
         } else {
             this.map.put(item.getTitle()
@@ -48,7 +42,7 @@ public class TodoManager
         return this.map;
     }
 
-    public HashMap<String, TodoItem> selectNearestbyDate() {
+    public HashMap<String, TodoItem> selectNearestbyDate1() {
         String[] result = new String[5];
         HashMap<String, Long> tempMap = new HashMap<>();
         LocalDate date = LocalDate.now();
@@ -72,6 +66,18 @@ public class TodoManager
             }
         }
             return finalResult;
+    }
+
+    public ArrayList<TodoItem> selectNearestbyDate(){
+        ArrayList<TodoItem> sorted = new ArrayList<>(this.map.values())
+
+        sorted.sort(new Comparator<TodoItem>() {
+            @Override
+            public int compare(TodoItem o1, TodoItem o2) {
+                return o1.getStartDate().compareTo(o2.getStartDate());
+            }
+        });
+        return sorted;
     }
 
     public HashMap<String, Long> selectNearestbyDate2() {
@@ -130,9 +136,9 @@ public class TodoManager
 
     public HashMap<String, TodoItem> searchByEndDate(LocalDate date) {
         HashMap<String, TodoItem> filteredMap = new HashMap<>();
-        for (Map.Entry<String, TodoItem> set : this.map.entrySet()) {
-            if (Objects.equals(set.getValue().endDate, date)) {
-                filteredMap.put(set.getKey(), set.getValue());
+        for (TodoItem item : this.map.values()) {
+            if (Objects.equals(item.getEndDate(), date)) {
+                filteredMap.put(item.getTitle(), item);
             }
         }
         return filteredMap;
@@ -140,9 +146,9 @@ public class TodoManager
 
     public HashMap<String, TodoItem> searchByStartDate(LocalDate date) {
         HashMap<String, TodoItem> filteredMap = new HashMap<>();
-        for (Map.Entry<String, TodoItem> set : this.map.entrySet()) {
-            if (Objects.equals(set.getValue().startDate, date)) {
-                filteredMap.put(set.getKey(), set.getValue());
+        for (TodoItem item : this.map.values()) {
+            if (Objects.equals(item.getStartDate(), date)) {
+                filteredMap.put(item.getTitle(), item);
             }
         }
         return filteredMap;
