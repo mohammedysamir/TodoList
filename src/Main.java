@@ -214,7 +214,7 @@ public class Main {
     public static void printCollection(HashMap<String, TodoItem> map, int length) {
         Iterator<String> iterator = map.keySet().iterator();
         int counter = 0;
-        while (iterator.hasNext() && counter < length)
+        while (iterator.hasNext() && counter++ < length)
             System.out.println(map.get(iterator.next()).toString());
     }
 }
