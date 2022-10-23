@@ -1,7 +1,7 @@
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class Main {
@@ -10,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         final String filePath = "todos";
-        String userAnswer = "";
+        String userAnswer;
         TodoManager manager = new TodoManager((HashMap<String, TodoItem>) fileHandler.parseItems(filePath));
         categoryList = new CategoryListHandler();
         String title;
@@ -29,11 +29,10 @@ public class Main {
                     System.out.print("Enter todo item's title to be updated: ");
                     scan.nextLine();
                     title = scan.nextLine();
-                    if (manager.searchByTitle(title) != null) {
-                        TodoItem updatedItem = parseUserInputs(scan);
-                        manager.updateTodo(title, updatedItem);
+                    TodoItem updatedItem = parseUserInputs(scan);
+                    if (manager.updateTodo(title, updatedItem))
                         System.out.println("Todo item has been updated successfully!");
-                    } else
+                    else
                         System.out.println("Todo item isn't exist, operation rejected!\n**try to insert it instead**");
                     break;
                 case 3: //delete existing item
@@ -47,10 +46,13 @@ public class Main {
                     break;
                 case 4: //print all todos from TaskManager's map
                     System.out.println("**Fetching all items**");
-                    printCollection(manager.selectAll());
+                    HashMap<String, TodoItem> allTodos = manager.selectAll();
+                    printCollection(allTodos, allTodos.size());
                     break;
                 case 5: //nearest by start date
-                    printCollection(manager.selectNearestByDate());
+                    System.out.println("**Fetching items based on Nearest date**");
+                    HashMap<String, TodoItem> nearestMap = manager.selectNearestByDate();
+                    printCollection(nearestMap, 5);
                     break;
                 case 6: //search by title
                     System.out.print("Enter todo item's title to search for: ");
@@ -65,7 +67,8 @@ public class Main {
                     String dateStr = scan.nextLine();
                     System.out.println();
                     LocalDate date = LocalDate.parse(dateStr);
-                    printCollection(manager.searchByStartDate(date));
+                    HashMap<String, TodoItem> startDateMap = manager.searchByStartDate(date);
+                    printCollection(startDateMap, startDateMap.size());
                     break;
                 case 8: //search by end date
                     System.out.print("Enter end date with format 'yyyy-mm-dd': ");
@@ -73,7 +76,8 @@ public class Main {
                     dateStr = scan.nextLine();
                     System.out.println();
                     date = LocalDate.parse(dateStr);
-                    printCollection(manager.searchByEndDate(date));
+                    HashMap<String, TodoItem> endDateMap = manager.searchByEndDate(date);
+                    printCollection(endDateMap, endDateMap.size());
                     break;
                 case 9: //search by priority
                     System.out.println("Select priority level to search for \n1:LOW\n2:MEDIUM\n3:HIGH");
@@ -93,21 +97,22 @@ public class Main {
                             resultMap = manager.searchByPriority(Priorities.HIGH);
                             break;
                     }
-                    printCollection(resultMap);
+                    printCollection(resultMap, resultMap.size());
                     break;
                 case 10: //add to category
                     scan.nextLine();
                     System.out.print("Enter todo title to update its category: ");
                     title = scan.nextLine();
                     String category = categoryHandling(scan);
-                    System.out.println("");
-                    manager.updateCategory(category, manager.searchByTitle(title));
+                    System.out.println();
+                    TodoItem updatedCategoryItem = manager.updateCategory(category, manager.searchByTitle(title));
+                    System.out.println("**update todo**\n" + updatedCategoryItem.toString());
                     break;
                 case 11: //add to favorite
                     scan.nextLine();
                     System.out.print("Enter item's title to move it to favorite: ");
                     title = scan.nextLine();
-                    System.out.println("");
+                    System.out.println();
                     if (manager.addToFavorite(title))
                         System.out.println("Todo item has been marked as **Favorite** successfully!");
                     else
@@ -206,9 +211,11 @@ public class Main {
         return category;
     }
 
-    public static void printCollection(HashMap<String, TodoItem> map) {
-        for (TodoItem item : map.values())
-            System.out.println(item.toString());
+    public static void printCollection(HashMap<String, TodoItem> map, int length) {
+        Iterator<String> iterator = map.keySet().iterator();
+        int counter = 0;
+        while (iterator.hasNext() && counter < length)
+            System.out.println(map.get(iterator.next()).toString());
     }
 }
 /*

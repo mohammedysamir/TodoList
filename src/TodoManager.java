@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,19 +42,10 @@ public class TodoManager {
     }
 
     public HashMap<String, TodoItem> selectNearestByDate() {
-        ArrayList<TodoItem> sorted = new ArrayList<>(this.map.values());
-
-        sorted.sort(new Comparator<TodoItem>() {
-            @Override
-            public int compare(TodoItem o1, TodoItem o2) {
-                return o1.getStartDate().compareTo(o2.getStartDate());
-            }
-        });
-        HashMap<String, TodoItem> sortedMap = new HashMap<>(); //done to make all outputs consistent
-        for (int i = 0; i < 5 && i < sorted.size(); i++){
-                sortedMap.put(sorted.get(i).getTitle(), sorted.get(i));
-        }
-        return sortedMap;
+        //1. turn map into stream to apply sort.
+        //2. compare|sort map based of start date.
+        //3. collect the outcome stream into new HashMap.
+        return map.entrySet().stream().sorted(Comparator.comparing(o -> o.getValue().getStartDate())).collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue,(oldValue, newValue)-> oldValue,HashMap::new));
     }
 
     public HashMap<String, TodoItem> searchByPriority(Priorities Priority) {
