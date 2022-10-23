@@ -160,6 +160,11 @@ public class Main {
         LocalDate startDate = LocalDate.parse(scan.nextLine().trim());
         System.out.print("\nEnter todo End date with format 'yyyy-mm-dd': ");
         LocalDate endDate = LocalDate.parse(scan.nextLine().trim());
+        while (endDate.isBefore(startDate)) { //validate date ranges
+            System.out.println("Can't pick an end date before start date!");
+            System.out.print("\nRe-enter todo End date with format 'yyyy-mm-dd': ");
+            endDate = LocalDate.parse(scan.nextLine().trim());
+        }
         System.out.print("\nis this todo Favorite? (Y/N): ");
         Boolean isFavorite = scan.nextLine().trim().equalsIgnoreCase("Y");
         System.out.print("\nEnter todo priority:- 1 = HIGH, 2 = MEDIUM, 3 = LOW ");
