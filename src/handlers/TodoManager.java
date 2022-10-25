@@ -1,3 +1,8 @@
+package handlers;
+
+import model.Priorities;
+import model.TodoItem;
+
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -11,8 +16,8 @@ public class TodoManager {
     }
 
     public boolean validateItem(TodoItem item) {
-        return item.isFavorite != null && item.endDate != null && item.category != null
-                && item.startDate != null && item.priority != null;
+        return item.getFavorite() != null && item.getEndDate() != null && item.getCategory() != null
+                && item.getStartDate() != null && item.getPriority() != null;
     }
 
     public boolean insertTodo(TodoItem item) {
@@ -20,14 +25,14 @@ public class TodoManager {
             return false;
         } else {
             this.map.put(item.getTitle()
-                    , new TodoItem(item.title, item.description, item.category, item.startDate, item.endDate, item.isFavorite, item.priority));
+                    , new TodoItem(item.getTitle(), item.getDescription(), item.getCategory(), item.getStartDate(), item.getEndDate(), item.getFavorite(), item.getPriority()));
         }
         return true;
     }
 
     public boolean updateTodo(String title, TodoItem item) {
         if (this.map.containsKey(title)) {
-            this.map.put(title, new TodoItem(item.title, item.description, item.category, item.startDate, item.endDate, item.isFavorite, item.priority));
+            this.map.put(title, new TodoItem(item.getTitle(), item.getDescription(), item.getCategory(), item.getStartDate(), item.getEndDate(), item.getFavorite(), item.getPriority()));
             return true;
         }
         return false;
@@ -45,23 +50,27 @@ public class TodoManager {
         //1. turn map into stream to apply sort.
         //2. compare|sort map based of start date.
         //3. collect the outcome stream into new HashMap.
-        return map.entrySet().stream().sorted(Comparator.comparing(o -> o.getValue().getStartDate())).collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue,(oldValue, newValue)-> oldValue,HashMap::new));
+        return map.entrySet().stream().sorted(Comparator.comparing(o -> o.getValue().getStartDate())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, HashMap::new));
     }
 
     public HashMap<String, TodoItem> searchByPriority(Priorities Priority) {
         HashMap<String, TodoItem> filteredMap = new HashMap<>();
         for (Map.Entry<String, TodoItem> set : this.map.entrySet()) {
-            if (set.getValue().priority == Priority) {
+            if (set.getValue().getPriority() == Priority) {
                 filteredMap.put(set.getKey(), set.getValue());
             }
         }
         return filteredMap;
     }
 
+    public HashMap<String, TodoItem> showFavorites() {
+        return map.entrySet().stream().filter(todoItem -> todoItem.getValue().getFavorite()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, HashMap::new));
+    }
+
     public HashMap<String, TodoItem> searchByCategory(String category) {
         HashMap<String, TodoItem> filteredMap = new HashMap<>();
         for (Map.Entry<String, TodoItem> set : this.map.entrySet()) {
-            if (Objects.equals(set.getValue().category, category)) {
+            if (Objects.equals(set.getValue().getCategory(), category)) {
                 filteredMap.put(set.getKey(), set.getValue());
             }
         }
@@ -104,7 +113,7 @@ public class TodoManager {
     }
 
     public TodoItem updateCategory(String category, TodoItem item) {
-        if (this.map.containsKey(item.title)) {
+        if (this.map.containsKey(item.getTitle())) {
             item.setCategory(category);
             return item;
         }

@@ -1,4 +1,7 @@
-import java.io.FileNotFoundException;
+package handlers;
+
+import handlers.FileHandler;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -7,9 +10,14 @@ import java.util.Arrays;
 
 public class CategoryListHandler {
     ArrayList<String> categories = new ArrayList<>();
+
+    public ArrayList<String> getCategories() {
+        return categories;
+    }
+
     private static final String categoriesPath = "categories";
 
-    public CategoryListHandler() throws FileNotFoundException {
+    public CategoryListHandler() throws IOException {
         //open category file
         FileHandler fileHandler = new FileHandler();
         //parse categories into Array and set it
@@ -21,8 +29,10 @@ public class CategoryListHandler {
     }
 
     public void viewCategories() {
+        if (categories.size() == 0)
+            System.out.println("You haven't previously selected categories, let's create one!");
         for (int i = 0; i < categories.size(); i++)
-            System.out.println(String.format("%d: %s", i + 1, categories.get(i)));
+            System.out.printf("%d: %s%n", i + 1, categories.get(i));
     }
 
     public String getCategoryAtIndex(int index) {
