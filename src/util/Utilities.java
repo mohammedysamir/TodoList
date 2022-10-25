@@ -42,12 +42,25 @@ public class Utilities {
         String description = scan.nextLine().trim();
         String category = categoryHandling(scan, categoryList);
         System.out.print("\nEnter todo Start date with format 'yyyy-mm-dd': ");
-        LocalDate startDate = LocalDate.parse(scan.nextLine().trim());
+        //handle wrong date format
+        String startDateStr = scan.nextLine().trim();
+        while (startDateStr.length() < 10) {
+            System.out.print("\nWrong date format!");
+            System.out.print("\nRe-Enter todo Start date with format 'yyyy-mm-dd': ");
+            startDateStr = scan.nextLine().trim();
+        }
+        LocalDate startDate = LocalDate.parse(startDateStr);
+        //handle end date wrong format
         System.out.print("\nEnter todo End date with format 'yyyy-mm-dd': ");
-        LocalDate endDate = LocalDate.parse(scan.nextLine().trim());
+        String endDateStr = scan.nextLine().trim();
+        while (endDateStr.length() < 10) {
+            System.out.print("\nWrong date format!");
+            System.out.print("\nRe-Enter todo Start date with format 'yyyy-mm-dd': ");
+            endDateStr = scan.nextLine().trim();
+        }
+        LocalDate endDate = LocalDate.parse(endDateStr);
         while (endDate.isBefore(startDate)) { //validate date ranges
             System.out.println("Can't pick an end date before start date!");
-            System.out.print("\nRe-enter todo End date with format 'yyyy-mm-dd': ");
             endDate = LocalDate.parse(scan.nextLine().trim());
         }
         System.out.print("\nis this todo Favorite? (Y/N): ");
