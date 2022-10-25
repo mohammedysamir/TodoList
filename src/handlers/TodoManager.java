@@ -93,6 +93,11 @@ public class TodoManager {
     }
 
     public HashMap<String, TodoItem> searchByEndDate(LocalDate date) {
+        if(date.toString().length() < 10)
+        {
+            System.err.println("You have entered the date in a wrong format!");
+            System.out.println("Please enter in the following format yyyy-mm-dd, enter day and month with 2 digits each");
+        }
         HashMap<String, TodoItem> filteredMap = new HashMap<>();
         for (TodoItem item : this.map.values()) {
             if (Objects.equals(item.getEndDate(), date)) {
@@ -103,6 +108,11 @@ public class TodoManager {
     }
 
     public HashMap<String, TodoItem> searchByStartDate(LocalDate date) {
+        if(date.toString().length() < 10)
+        {
+            System.err.println("You have entered the date in a wrong format!");
+            System.out.println("Please enter in the following format yyyy-mm-dd, enter day and month with 2 digits each");
+        }
         HashMap<String, TodoItem> filteredMap = new HashMap<>();
         for (TodoItem item : this.map.values()) {
             if (Objects.equals(item.getStartDate(), date)) {
