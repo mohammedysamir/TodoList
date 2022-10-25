@@ -75,6 +75,11 @@ public class Main {
                     System.out.print("Enter start date with format 'yyyy-mm-dd': ");
                     scan.nextLine();
                     String dateStr = scan.nextLine();
+                    //validate date length (full digits)
+                    if (dateStr.length() < 10) {
+                        System.err.println("You have entered the date in a wrong format!");
+                        System.out.println("Please enter in the following format yyyy-mm-dd, enter day and month with 2 digits each");
+                    }
                     System.out.println();
                     LocalDate date = LocalDate.parse(dateStr);
                     HashMap<String, TodoItem> startDateMap = manager.searchByStartDate(date);
@@ -84,6 +89,10 @@ public class Main {
                     System.out.print("Enter end date with format 'yyyy-mm-dd': ");
                     scan.nextLine();
                     dateStr = scan.nextLine();
+                    if (dateStr.length() < 10) {
+                        System.err.println("You have entered the date in a wrong format!");
+                        System.out.println("Please enter in the following format yyyy-mm-dd, enter day and month with 2 digits each");
+                    }
                     System.out.println();
                     date = LocalDate.parse(dateStr);
                     HashMap<String, TodoItem> endDateMap = manager.searchByEndDate(date);
