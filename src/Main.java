@@ -59,7 +59,11 @@ public class Main {
                     scan.nextLine();
                     title = scan.nextLine();
                     System.out.println();
-                    System.out.println(manager.searchByTitle(title).toString());
+                    TodoItem todoItem = manager.searchByTitle(title);
+                    if (todoItem != null)
+                        System.out.println(manager.searchByTitle(title).toString());
+                    else
+                        System.err.println("Title entered is not found, try to search for another title!");
                     break;
                 case 7: //search by start date
                     System.out.print("Enter start date with format 'yyyy-mm-dd': ");
@@ -217,6 +221,8 @@ public class Main {
     }
 
     public static void printCollection(HashMap<String, TodoItem> map, int length) {
+        if (map.isEmpty())
+            System.err.println("No matches found, try another predicate!");
         Iterator<String> iterator = map.keySet().iterator();
         int counter = 0;
         while (iterator.hasNext() && counter++ < length)
