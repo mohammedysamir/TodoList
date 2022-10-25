@@ -77,7 +77,7 @@ public class Main {
                     String dateStr = scan.nextLine();
                     //validate date length (full digits)
                     while (dateStr.length() < 10) {
-                        System.err.println("You have entered the date in a wrong format!");
+                        System.out.println("You have entered the date in a wrong format!");
                         System.out.print("Please enter in the following format yyyy-mm-dd, enter day and month with 2 digits each: ");
                         dateStr = scan.nextLine();
                     }
@@ -91,7 +91,7 @@ public class Main {
                     scan.nextLine();
                     dateStr = scan.nextLine();
                     while (dateStr.length() < 10) {
-                        System.err.println("You have entered the date in a wrong format!");
+                        System.out.println("You have entered the date in a wrong format!");
                         System.out.print("Please enter in the following format yyyy-mm-dd, enter day and month with 2 digits each: ");
                         dateStr = scan.nextLine();
                     }

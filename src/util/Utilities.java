@@ -97,7 +97,7 @@ public class Utilities {
 
     public static void printCollection(HashMap<String, TodoItem> map, int length) {
         if (map.isEmpty())
-            System.err.println("No results found, try another predicate!");
+            System.out.println("No results found, try another predicate!");
         Iterator<String> iterator = map.keySet().iterator();
         int counter = 0;
         while (iterator.hasNext() && counter++ < length)
