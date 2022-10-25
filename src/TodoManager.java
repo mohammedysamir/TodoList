@@ -45,7 +45,7 @@ public class TodoManager {
         //1. turn map into stream to apply sort.
         //2. compare|sort map based of start date.
         //3. collect the outcome stream into new HashMap.
-        return map.entrySet().stream().sorted(Comparator.comparing(o -> o.getValue().getStartDate())).collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue,(oldValue, newValue)-> oldValue,HashMap::new));
+        return map.entrySet().stream().sorted(Comparator.comparing(o -> o.getValue().getStartDate())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, HashMap::new));
     }
 
     public HashMap<String, TodoItem> searchByPriority(Priorities Priority) {
@@ -56,6 +56,10 @@ public class TodoManager {
             }
         }
         return filteredMap;
+    }
+
+    public HashMap<String, TodoItem> showFavorites() {
+        return map.entrySet().stream().filter(todoItem -> todoItem.getValue().getFavorite()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, HashMap::new));
     }
 
     public HashMap<String, TodoItem> searchByCategory(String category) {
