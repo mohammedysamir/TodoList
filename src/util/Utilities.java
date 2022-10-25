@@ -27,7 +27,7 @@ public class Utilities {
                         "\n9. Search by item's priority." +
                         "\n10. Add Todo item to Category." +
                         "\n11. Show Favorites" +
-                        "\n12. Add Todo item to Favorite." +
+                        "\n12. Toggle item's Favorite." +
                         "\n13. Exit" +
                         "\n***********************************************" +
                         "\nchoice: ");
@@ -97,12 +97,16 @@ public class Utilities {
     }
 
     public static void printCollection(HashMap<String, TodoItem> map, int length) {
-        if (map.isEmpty())
+        if (map.isEmpty()) {
             System.out.println("No results found, try another predicate!");
+            return;
+        }
         Iterator<String> iterator = map.keySet().iterator();
         int counter = 0;
-        while (iterator.hasNext() && counter++ < length)
-            System.out.println(map.get(iterator.next()).toString());
+        while (iterator.hasNext() && counter++ < length) {
+            System.out.println("-----------------------" + (counter + 1) + "-----------------------");
+            System.out.println(map.get(iterator.next()).stringEquivalent());
+        }
     }
 }
 

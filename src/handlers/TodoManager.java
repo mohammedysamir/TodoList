@@ -5,7 +5,6 @@ import model.TodoItem;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 
@@ -87,15 +86,14 @@ public class TodoManager {
         return map.entrySet().stream().filter(todoItem -> todoItem.getValue().getTitle().contains(title)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, HashMap::new));
     }
 
-    public boolean addToFavorite(String title) {
+    public boolean toggleFavorite(String title) {
         if (searchByTitle(title).size() == 1) {
             TodoItem item = searchByTitle(title).get(title);
-            item.setFavorite(true);
+            item.setFavorite(!item.getFavorite());
             map.put(title, item);
-        } else {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     public HashMap<String, TodoItem> searchByEndDate(LocalDate date) {

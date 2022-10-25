@@ -124,23 +124,24 @@ public class Main {
                     String category = Utilities.categoryHandling(scan, categoryList);
                     System.out.println();
                     TodoItem updatedCategoryItem = manager.updateCategory(category, manager.searchByTitle(title).get(title));
-                    if (updatedCategoryItem != null) {
+                    if (updatedCategoryItem == null) {
                         System.out.println("No item found with this title");
                         break;
                     }
-                    System.out.println("**update todo**\n" + updatedCategoryItem.toString());
+                    System.out.println("**update todo**\n" + updatedCategoryItem.stringEquivalent());
                     break;
                 case 11:
                     System.out.println("Fetching Favorite todo items");
                     HashMap<String, TodoItem> favorites = manager.showFavorites();
                     Utilities.printCollection(favorites, favorites.size());
+                    break;
                 case 12: //add to favorite
                     scan.nextLine();
                     System.out.print("Enter item's title to move it to favorite: ");
                     title = scan.nextLine();
                     System.out.println();
-                    if (manager.addToFavorite(title))
-                        System.out.println("Todo item has been marked as **Favorite** successfully!");
+                    if (manager.toggleFavorite(title))
+                        System.out.println("Todo item's **Favorite** has been toggled successfully!");
                     else
                         System.out.println("There's no todo item with specified title, operation rejected!");
                     break;
