@@ -5,6 +5,7 @@ import model.TodoItem;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 
@@ -77,13 +78,18 @@ public class TodoManager {
         return filteredMap;
     }
 
-    public TodoItem searchByTitle(String title) {
-        return this.map.get(title);
+    public HashMap<String, TodoItem> searchByTitle(String title) {
+        if (map.containsKey(title)) {
+            TodoItem item = map.get(title);
+            new HashMap<String, TodoItem>().put(title, item);
+        }
+        System.out.println("Can't find item with specified title!\nBut here are list of items that contain title as substring");
+        return map.entrySet().stream().filter(todoItem -> todoItem.getValue().getTitle().contains(title)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, HashMap::new));
     }
 
     public boolean addToFavorite(String title) {
-        if (map.containsKey(title)) {
-            TodoItem item = searchByTitle(title);
+        if (searchByTitle(title).size() == 1) {
+            TodoItem item = searchByTitle(title).get(title);
             item.setFavorite(true);
             map.put(title, item);
         } else {

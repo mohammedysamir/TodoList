@@ -65,11 +65,8 @@ public class Main {
                     scan.nextLine();
                     title = scan.nextLine();
                     System.out.println();
-                    TodoItem todoItem = manager.searchByTitle(title);
-                    if (todoItem != null)
-                        System.out.println(manager.searchByTitle(title).toString());
-                    else
-                        System.err.println("Title entered is not found, try to search for another title!");
+                    HashMap<String, TodoItem> titlesMap = manager.searchByTitle(title);
+                    Utilities.printCollection(titlesMap, titlesMap.size());
                     break;
                 case 7: //search by start date
                     System.out.print("Enter start date with format 'yyyy-mm-dd': ");
@@ -126,7 +123,7 @@ public class Main {
                     title = scan.nextLine();
                     String category = Utilities.categoryHandling(scan, categoryList);
                     System.out.println();
-                    TodoItem updatedCategoryItem = manager.updateCategory(category, manager.searchByTitle(title));
+                    TodoItem updatedCategoryItem = manager.updateCategory(category, manager.searchByTitle(title).get(title));
                     if (updatedCategoryItem != null) {
                         System.out.println("No item found with this title");
                         break;
