@@ -26,8 +26,9 @@ public class Utilities {
                         "\n8. Search by End date." +
                         "\n9. Search by item's priority." +
                         "\n10. Add Todo item to Category." +
-                        "\n11. Add Todo item to Favorite." +
-                        "\n12. Exit" +
+                        "\n11. Show Favorites" +
+                        "\n12. Add Todo item to Favorite." +
+                        "\n13. Exit" +
                         "\n***********************************************" +
                         "\nchoice: ");
     }
