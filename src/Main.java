@@ -76,9 +76,10 @@ public class Main {
                     scan.nextLine();
                     String dateStr = scan.nextLine();
                     //validate date length (full digits)
-                    if (dateStr.length() < 10) {
+                    while (dateStr.length() < 10) {
                         System.err.println("You have entered the date in a wrong format!");
-                        System.out.println("Please enter in the following format yyyy-mm-dd, enter day and month with 2 digits each");
+                        System.out.print("Please enter in the following format yyyy-mm-dd, enter day and month with 2 digits each: ");
+                        dateStr = scan.nextLine();
                     }
                     System.out.println();
                     LocalDate date = LocalDate.parse(dateStr);
@@ -89,9 +90,10 @@ public class Main {
                     System.out.print("Enter end date with format 'yyyy-mm-dd': ");
                     scan.nextLine();
                     dateStr = scan.nextLine();
-                    if (dateStr.length() < 10) {
+                    while (dateStr.length() < 10) {
                         System.err.println("You have entered the date in a wrong format!");
-                        System.out.println("Please enter in the following format yyyy-mm-dd, enter day and month with 2 digits each");
+                        System.out.print("Please enter in the following format yyyy-mm-dd, enter day and month with 2 digits each: ");
+                        dateStr = scan.nextLine();
                     }
                     System.out.println();
                     date = LocalDate.parse(dateStr);
@@ -136,6 +138,8 @@ public class Main {
                         System.out.println("Todo item has been marked as **Favorite** successfully!");
                     else
                         System.out.println("There's no todo item with specified title, operation rejected!");
+                    break;
+                case 12:
                     break;
                 default:
                     System.out.println("Invalid choice entered");

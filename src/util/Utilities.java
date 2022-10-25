@@ -27,6 +27,7 @@ public class Utilities {
                         "\n9. Search by item's priority." +
                         "\n10. Add Todo item to Category." +
                         "\n11. Add Todo item to Favorite." +
+                        "\n12. Exit" +
                         "\n***********************************************" +
                         "\nchoice: ");
     }
