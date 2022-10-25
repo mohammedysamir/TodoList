@@ -127,6 +127,10 @@ public class Main {
                     String category = Utilities.categoryHandling(scan, categoryList);
                     System.out.println();
                     TodoItem updatedCategoryItem = manager.updateCategory(category, manager.searchByTitle(title));
+                    if(updatedCategoryItem != null) {
+                        System.out.println("No item found with this title");
+                        break;
+                    }
                     System.out.println("**update todo**\n" + updatedCategoryItem.toString());
                     break;
                 case 11: //add to favorite
