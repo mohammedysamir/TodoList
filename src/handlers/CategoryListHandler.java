@@ -1,4 +1,7 @@
-import java.io.FileNotFoundException;
+package handlers;
+
+import handlers.FileHandler;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -7,6 +10,11 @@ import java.util.Arrays;
 
 public class CategoryListHandler {
     ArrayList<String> categories = new ArrayList<>();
+
+    public ArrayList<String> getCategories() {
+        return categories;
+    }
+
     private static final String categoriesPath = "categories";
 
     public CategoryListHandler() throws IOException {
