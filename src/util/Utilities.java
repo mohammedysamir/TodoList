@@ -69,8 +69,8 @@ public class Utilities {
 
     public static String categoryHandling(Scanner scan, CategoryListHandler categoryList) throws IOException {
         String category;
-        System.out.print("\nEnter todo Category number, or enter new category name:\n");
         categoryList.viewCategories();
+        System.out.print("\nEnter todo Category number, or enter new category name:\n");
         if (scan.hasNextInt()) //check if next input is an integer
         {
             int categoryIndex = Integer.parseInt(scan.nextLine());
