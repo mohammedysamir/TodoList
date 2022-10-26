@@ -1,3 +1,4 @@
+import constants.Constants;
 import handlers.CategoryListHandler;
 import handlers.FileHandler;
 import handlers.TodoManager;
@@ -15,9 +16,8 @@ public class Main {
     static CategoryListHandler categoryList;
 
     public static void main(String[] args) throws IOException {
-        final String filePath = "todos";
         String userAnswer;
-        TodoManager manager = new TodoManager((HashMap<String, TodoItem>) fileHandler.parseItems(filePath));
+        TodoManager manager = new TodoManager((HashMap<String, TodoItem>) fileHandler.parseItems(Constants.todoFilePath));
         categoryList = new CategoryListHandler();
         String title;
         Scanner scan = new Scanner(System.in);
@@ -158,7 +158,7 @@ public class Main {
         } while (userAnswer.equalsIgnoreCase("Y") ||
                 userAnswer.equalsIgnoreCase("Yes"));
         scan.close();
-        fileHandler.writeToFile(manager.selectAll(), filePath); //write final map to file
+        fileHandler.writeToFile(manager.selectAll(), Constants.todoFilePath); //write final map to file
         System.out.println("Thanks for using our application");
     }
 }

@@ -1,5 +1,6 @@
 package handlers;
 
+import constants.Constants;
 import handlers.FileHandler;
 
 import java.io.IOException;
@@ -15,13 +16,11 @@ public class CategoryListHandler {
         return categories;
     }
 
-    private static final String categoriesPath = "categories";
-
     public CategoryListHandler() throws IOException {
         //open category file
         FileHandler fileHandler = new FileHandler();
         //parse categories into Array and set it
-        categories = parseCategories(fileHandler.readFromFile(categoriesPath).toString());
+        categories = parseCategories(fileHandler.readFromFile(Constants.categoryFilePath).toString());
     }
 
     public void addCategory(String category) {
@@ -29,6 +28,7 @@ public class CategoryListHandler {
     }
 
     public void viewCategories() {
+        //todo: fix empty category name
         if (categories.size() == 0)
             System.out.println("You haven't previously selected categories, let's create one!");
         for (int i = 0; i < categories.size(); i++)
@@ -51,7 +51,7 @@ public class CategoryListHandler {
         StringBuilder result = new StringBuilder();
         for (String category : categories)
             result.append(category + ",\n");
-        Files.writeString(Path.of(categoriesPath), result.toString());
+        Files.writeString(Path.of(Constants.categoryFilePath), result.toString());
     }
 
 }

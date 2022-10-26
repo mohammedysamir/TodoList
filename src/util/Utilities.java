@@ -117,7 +117,7 @@ public class Utilities {
         Iterator<String> iterator = map.keySet().iterator();
         int counter = 0;
         while (iterator.hasNext() && counter++ < length) {
-            System.out.println("-----------------------" + (counter + 1) + "-----------------------");
+            System.out.println("-----------------------" + counter + "-----------------------");
             System.out.println(map.get(iterator.next()).stringEquivalent());
         }
     }
