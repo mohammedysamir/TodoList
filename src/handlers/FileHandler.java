@@ -13,7 +13,13 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class FileHandler {
-
+    /**
+     * Read TodoItems from file
+     *
+     * @param fileLocation: represents file location to read from | create new one if not exist
+     * @return StringBuilder of file's content
+     * @throws IOException: to handle creating and opening files
+     */
     public StringBuilder readFromFile(String fileLocation) throws IOException {
 
         StringBuilder fileResult = new StringBuilder();
@@ -32,6 +38,13 @@ public class FileHandler {
         return fileResult;
     }
 
+    /**
+     * Write TodoItems into file using toString() to be presented as json{}
+     *
+     * @param listItem:    map is used to write its content (_todo items.toString()) into file
+     * @param fileLocation file's location to write into
+     * @throws IOException handle creating and opening file operations
+     */
     public void writeToFile(HashMap<String, TodoItem> listItem, String fileLocation) throws IOException {
         StringBuilder result = new StringBuilder();
         for (TodoItem todo : listItem.values()) {
@@ -42,6 +55,13 @@ public class FileHandler {
     }
 
 
+    /**
+     * Used to parse TodoItems to instantiate map of TodoItems
+     *
+     * @param fileLocation: file's location to read from
+     * @return map of _todo items
+     * @throws IOException handle creating and opening files operations
+     */
     public Map<String, TodoItem> parseItems(String fileLocation) throws IOException {
         Map<String, TodoItem> todos = new HashMap<>();
 
