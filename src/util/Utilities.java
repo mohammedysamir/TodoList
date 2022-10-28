@@ -11,7 +11,9 @@ import handlers.*;
 
 public class Utilities {
 
-    //util functions
+    /**
+     * Function to display menu UI for user to select from
+     */
     public static void displayMenu() {
         System.out.print(
                 "***********************************************" +
@@ -33,6 +35,14 @@ public class Utilities {
                         "\nchoice: ");
     }
 
+    /**
+     * Used to parse user inputs and validate them.
+     *
+     * @param scan:         Scanner object is used to take console inputs
+     * @param categoryList: CategoryListHandler object to display categories | insert new category entered by user.
+     * @return _todo item instantiated from user inputs
+     * @throws IOException handles creating and opening files operations
+     */
     public static TodoItem parseUserInputs(Scanner scan, CategoryListHandler categoryList) throws IOException {
         //simple version of input taking
         scan.nextLine();
@@ -81,18 +91,28 @@ public class Utilities {
         return new TodoItem(title, description, category, startDate, endDate, isFavorite, priority);
     }
 
+    /**
+     * Handles user selecting existing category or enter new category
+     *
+     * @param scan:         Scanner object is used to take console inputs
+     * @param categoryList: CategoryListHandler object to display categories | insert new category entered by user.
+     * @return category selected by user either by number of existing category or new category entered.
+     * @throws IOException handles creating and opening files operations
+     */
     public static String categoryHandling(Scanner scan, CategoryListHandler categoryList) throws IOException {
         String category;
         categoryList.viewCategories();
         System.out.print("\nEnter todo Category number, or enter new category name:\n");
         if (scan.hasNextInt()) //check if next input is an integer
         {
+            //display existing categories saved in 'categories.txt'
             int categoryIndex = Integer.parseInt(scan.nextLine());
             //check if index is out of bound
             while (categoryIndex > categoryList.getCategories().size()) {
                 System.out.println("Invalid category selected, re-enter category number");
                 categoryIndex = Integer.parseInt(scan.nextLine());
             }
+            //get category at index entered by user
             category = categoryList.getCategoryAtIndex(categoryIndex - 1); //position-index different
             scan.nextLine();
         } else {
@@ -109,6 +129,12 @@ public class Utilities {
         return category;
     }
 
+    /**
+     * used to print HashMap<String, TodoItem> contents
+     *
+     * @param map:    map to be printed
+     * @param length: define length we will iterate on
+     */
     public static void printCollection(HashMap<String, TodoItem> map, int length) {
         if (map.isEmpty()) {
             System.out.println("No results found, try another predicate!");

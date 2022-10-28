@@ -1,4 +1,3 @@
-import constants.Constants;
 import handlers.CategoryListHandler;
 import handlers.FileHandler;
 import handlers.TodoManager;
@@ -12,15 +11,15 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
-    static FileHandler fileHandler = new FileHandler();
     static CategoryListHandler categoryList;
 
     public static void main(String[] args) throws IOException {
-        String userAnswer;
-        TodoManager manager = new TodoManager((HashMap<String, TodoItem>) fileHandler.parseItems(Constants.todoFilePath));
+        String userAnswer = "";
+        TodoManager manager = new TodoManager();
         categoryList = new CategoryListHandler();
         String title;
         Scanner scan = new Scanner(System.in);
+        boolean exit = false;
         do {
             Utilities.displayMenu();
             int choice = scan.nextInt();
@@ -146,19 +145,21 @@ public class Main {
                         System.out.println("There's no todo item with specified title, operation rejected!");
                     break;
                 case 13:
+                    exit = true;
                     break;
                 default:
                     System.out.println("Invalid choice entered");
                     break;
             }
             scan.nextLine();
-            System.out.print("Do you wish to continue?: ");
-            //take user input to terminate the app
-            userAnswer = scan.nextLine();
-        } while (userAnswer.equalsIgnoreCase("Y") ||
-                userAnswer.equalsIgnoreCase("Yes"));
+            if (!exit) {
+                System.out.print("Do you wish to continue?: ");
+                //take user input to terminate the app
+                userAnswer = scan.nextLine();
+            }
+        } while ((userAnswer.equalsIgnoreCase("Y") ||
+                userAnswer.equalsIgnoreCase("Yes")) && !exit);
         scan.close();
-        fileHandler.writeToFile(manager.selectAll(), Constants.todoFilePath); //write final map to file
         System.out.println("Thanks for using our application");
     }
 }
