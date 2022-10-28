@@ -41,17 +41,13 @@ public class TodoManager {
      * @throws IOException handles file's operations
      */
     public boolean insertTodo(TodoItem item) throws IOException {
-        //search if the map has this title -> if yes then skip to not overwrite existing item's data
-        if (map.containsKey(item.getTitle())) {
-            return false;
-        } else {
-            //add item to map
-            map.put(item.getTitle()
-                    , new TodoItem(item.getTitle(), item.getDescription(), item.getCategory(), item.getStartDate(), item.getEndDate(), item.getFavorite(), item.getPriority()));
-        }
+        //putIfAbsent -> added the item to the map iff the key if absent.
+        //returns null if the key is absent otherwise returns the associated value (old)
+        //and prevent the addition
+        boolean isInserted = map.putIfAbsent(item.getTitle(), item) == null;
         //write to file
         fileHandler.writeToFile(map, Constants.todoFilePath);
-        return true; //item is added successfully
+        return isInserted; //item is added successfully
     }
 
     /**
@@ -117,9 +113,10 @@ public class TodoManager {
         //update the map
         map = (HashMap<String, TodoItem>) fileHandler.parseItems(Constants.todoFilePath);
         //1. turn map into stream to apply sort.
-        //2. compare|sort map based of start date.
-        //3. collect the outcome stream into new HashMap.
-        return map.entrySet().stream().sorted(Comparator.comparing(o -> o.getValue().getStartDate())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, HashMap::new));
+        //2. added filter to filter only starting dates that are after today's date
+        //3. compare|sort map based of start date.
+        //4. collect the outcome stream into new HashMap.
+        return map.entrySet().stream().filter(t -> t.getValue().getStartDate().isAfter(LocalDate.now())).sorted(Comparator.comparing(o -> o.getValue().getStartDate())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, HashMap::new));
     }
 
     /**
