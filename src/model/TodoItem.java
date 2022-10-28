@@ -86,4 +86,12 @@ public class TodoItem {
                 "," + priority + '\n' +
                 '}' + '\n';
     }
+
+    public String stringEquivalent() {
+        return String.format("\t\t\t %s \t%s" +
+                "\nDescription: %s" +
+                "\nCategory:%s\tPriority:%s" +
+                "\nStart date: %s\tEnd date: %s", title, isFavorite ? "\uD83C\uDF1F" : "", description, category, priority.toString(), startDate.toString(), endDate.toString());
+    }
+
 }

@@ -11,16 +11,15 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
-    static FileHandler fileHandler = new FileHandler();
     static CategoryListHandler categoryList;
 
     public static void main(String[] args) throws IOException {
-        final String filePath = "todos";
-        String userAnswer;
-        TodoManager manager = new TodoManager((HashMap<String, TodoItem>) fileHandler.parseItems(filePath));
+        String userAnswer = "";
+        TodoManager manager = new TodoManager();
         categoryList = new CategoryListHandler();
         String title;
         Scanner scan = new Scanner(System.in);
+        boolean exit = false;
         do {
             Utilities.displayMenu();
             int choice = scan.nextInt();
@@ -65,11 +64,8 @@ public class Main {
                     scan.nextLine();
                     title = scan.nextLine();
                     System.out.println();
-                    TodoItem todoItem = manager.searchByTitle(title);
-                    if (todoItem != null)
-                        System.out.println(manager.searchByTitle(title).toString());
-                    else
-                        System.err.println("Title entered is not found, try to search for another title!");
+                    HashMap<String, TodoItem> titlesMap = manager.searchByTitle(title);
+                    Utilities.printCollection(titlesMap, titlesMap.size());
                     break;
                 case 7: //search by start date
                     System.out.print("Enter start date with format 'yyyy-mm-dd': ");
@@ -126,41 +122,44 @@ public class Main {
                     title = scan.nextLine();
                     String category = Utilities.categoryHandling(scan, categoryList);
                     System.out.println();
-                    TodoItem updatedCategoryItem = manager.updateCategory(category, manager.searchByTitle(title));
-                    if (updatedCategoryItem != null) {
+                    TodoItem updatedCategoryItem = manager.updateCategory(category, manager.searchByTitle(title).get(title));
+                    if (updatedCategoryItem == null) {
                         System.out.println("No item found with this title");
                         break;
                     }
-                    System.out.println("**update todo**\n" + updatedCategoryItem.toString());
+                    System.out.println("**update todo**\n" + updatedCategoryItem.stringEquivalent());
                     break;
                 case 11:
                     System.out.println("Fetching Favorite todo items");
                     HashMap<String, TodoItem> favorites = manager.showFavorites();
                     Utilities.printCollection(favorites, favorites.size());
+                    break;
                 case 12: //add to favorite
                     scan.nextLine();
                     System.out.print("Enter item's title to move it to favorite: ");
                     title = scan.nextLine();
                     System.out.println();
-                    if (manager.addToFavorite(title))
-                        System.out.println("Todo item has been marked as **Favorite** successfully!");
+                    if (manager.toggleFavorite(title))
+                        System.out.println("Todo item's **Favorite** has been toggled successfully!");
                     else
                         System.out.println("There's no todo item with specified title, operation rejected!");
                     break;
                 case 13:
+                    exit = true;
                     break;
                 default:
                     System.out.println("Invalid choice entered");
                     break;
             }
             scan.nextLine();
-            System.out.print("Do you wish to continue?: ");
-            //take user input to terminate the app
-            userAnswer = scan.nextLine();
-        } while (userAnswer.equalsIgnoreCase("Y") ||
-                userAnswer.equalsIgnoreCase("Yes"));
+            if (!exit) {
+                System.out.print("Do you wish to continue?: ");
+                //take user input to terminate the app
+                userAnswer = scan.nextLine();
+            }
+        } while ((userAnswer.equalsIgnoreCase("Y") ||
+                userAnswer.equalsIgnoreCase("Yes")) && !exit);
         scan.close();
-        fileHandler.writeToFile(manager.selectAll(), filePath); //write final map to file
         System.out.println("Thanks for using our application");
     }
 }
