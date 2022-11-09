@@ -1,5 +1,6 @@
+import database.DatabaseHandler;
+import database.MySqlDatabase;
 import handlers.CategoryListHandler;
-import handlers.FileHandler;
 import handlers.TodoManager;
 import util.Utilities;
 import model.Priorities;
@@ -15,8 +16,9 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         String userAnswer = "";
-        TodoManager manager = new TodoManager();
-        categoryList = new CategoryListHandler();
+        DatabaseHandler database = new MySqlDatabase("todo_list", "root", "P@ssw0rd"); //DB Object
+        TodoManager manager = new TodoManager(database);
+        categoryList = new CategoryListHandler(database);
         String title;
         Scanner scan = new Scanner(System.in);
         boolean exit = false;
@@ -25,7 +27,7 @@ public class Main {
             int choice = scan.nextInt();
             switch (choice) {
                 case 1: //insert new item
-                    if (manager.insertTodo(Utilities.parseUserInputs(scan, categoryList)))
+                    if (manager.insertTodo(Utilities.parseUserInputs(scan,categoryList)))
                         System.out.println("Todo item has been inserted successfully!");
                     else
                         System.out.println("Todo item had been inserted before, operation rejected!\n**try to update existing todo**");
@@ -103,7 +105,7 @@ public class Main {
                     switch (priorityLevel) {
                         case 1:
                             System.out.println("**Showing items of low priority**");
-                            resultMap = manager.searchByPriority(Priorities.LOW);
+                            resultMap = manager.searchByPriority(Priorities.LOW);//should we take it as Enum or String
                             break;
                         case 2:
                             System.out.println("**Showing items of medium priority**");
@@ -134,7 +136,7 @@ public class Main {
                     HashMap<String, TodoItem> favorites = manager.showFavorites();
                     Utilities.printCollection(favorites, favorites.size());
                     break;
-                case 12: //add to favorite
+                case 12: //add to favorite what about this one
                     scan.nextLine();
                     System.out.print("Enter item's title to move it to favorite: ");
                     title = scan.nextLine();

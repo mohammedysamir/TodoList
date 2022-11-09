@@ -1,9 +1,12 @@
 package handlers;
 
+import constants.Constants;
 import model.Priorities;
 import model.TodoItem;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -51,7 +54,9 @@ public class FileHandler {
             String json = todo.toString();
             result.append(json);
         }
-        Files.writeString(Path.of(fileLocation), result.toString());
+        BufferedWriter writer = new BufferedWriter(new FileWriter(fileLocation));
+        writer.write(result.toString());
+        writer.close();
     }
 
 

@@ -122,7 +122,6 @@ public class Utilities {
             if (!categoryList.isCategoryFound(tempCategory))//new category to be added
             {
                 categoryList.addCategory(tempCategory);
-                categoryList.writeCategoriesToFile(); //write to file
             }
             category = tempCategory;
         }
@@ -146,6 +145,14 @@ public class Utilities {
             System.out.println("-----------------------" + counter + "-----------------------");
             System.out.println(map.get(iterator.next()).stringEquivalent());
         }
+    }
+
+    public static Priorities mapStringToPriority(String p){
+        if(p.equalsIgnoreCase("Low"))
+            return Priorities.LOW;
+        if(p.equalsIgnoreCase("Medium"))
+            return Priorities.MEDIUM;
+        return Priorities.HIGH;
     }
 }
 
