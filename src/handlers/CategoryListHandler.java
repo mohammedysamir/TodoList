@@ -14,6 +14,14 @@ public class CategoryListHandler {
     DatabaseHandler databaseHandler;
 
     /**
+     * Destructor to close database connection
+     */
+    @Override
+    protected void finalize() {
+        databaseHandler.closeConnection();
+    }
+
+    /**
      * Constructor used to define database handler object and read categories from 'categories' table
      */
     public CategoryListHandler(DatabaseHandler databaseHandler) {

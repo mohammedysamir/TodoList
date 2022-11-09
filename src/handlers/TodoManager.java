@@ -4,19 +4,28 @@ package handlers;
 import database.DatabaseHandler;
 import model.Priorities;
 import model.TodoItem;
+
 import java.time.LocalDate;
 import java.util.*;
 
 
-
 public class TodoManager {
-   DatabaseHandler databaseHandler;
+    DatabaseHandler databaseHandler;
+
+    /**
+     * Destructor to close database connection
+     */
+    @Override
+    protected void finalize() {
+        databaseHandler.closeConnection();
+    }
 
     /**
      * Constructor is used to define needed resources|objects fileHandler and todoMap
      */
     public TodoManager(DatabaseHandler databaseHandler) {
         this.databaseHandler = databaseHandler;
+        this.databaseHandler.openConnection();
     }
 
     /**
@@ -36,7 +45,7 @@ public class TodoManager {
      * @param item item to be written and inserted
      * @return boolean if item is inserted successfully.
      */
-    public boolean insertTodo(TodoItem item)  {
+    public boolean insertTodo(TodoItem item) {
 
         return databaseHandler.insertTodoItem(item);
     }
@@ -48,7 +57,7 @@ public class TodoManager {
      * @param item  new item's data to be replaced instead of old item's
      * @return boolean: if item is updated successfully
      */
-    public boolean updateTodo(String title, TodoItem item)  {
+    public boolean updateTodo(String title, TodoItem item) {
         return databaseHandler.updateTodoItem(title, item);
     }
 
@@ -58,7 +67,7 @@ public class TodoManager {
      * @param title item's title to be deleted
      * @return boolean if item's deleted successfully
      */
-    public boolean deleteTodo(String title)  {
+    public boolean deleteTodo(String title) {
         return databaseHandler.deleteTodoItem(title);
     }
 
@@ -67,8 +76,8 @@ public class TodoManager {
      *
      * @return HashMap<String, TodoItem>
      */
-    public HashMap<String, TodoItem> selectAll()  {
-       return databaseHandler.getAllItems();
+    public HashMap<String, TodoItem> selectAll() {
+        return databaseHandler.getAllItems();
     }
 
     /**
@@ -76,7 +85,7 @@ public class TodoManager {
      *
      * @return sorted HashMap
      */
-    public HashMap<String, TodoItem> selectNearestByDate()  {
+    public HashMap<String, TodoItem> selectNearestByDate() {
         return databaseHandler.searchByNearestDate();
     }
 
@@ -86,8 +95,8 @@ public class TodoManager {
      * @param priority priority to be searched for
      * @return HashMap<String, TodoItem>
      */
-    public HashMap<String, TodoItem> searchByPriority(Priorities priority)  {
-       return databaseHandler.searchByPriority(priority.toString());
+    public HashMap<String, TodoItem> searchByPriority(Priorities priority) {
+        return databaseHandler.searchByPriority(priority.toString());
     }
 
     /**
@@ -95,8 +104,8 @@ public class TodoManager {
      *
      * @return HashMap<String, TodoItem>
      */
-    public HashMap<String, TodoItem> showFavorites()  {
-       return databaseHandler.showFavorites();
+    public HashMap<String, TodoItem> showFavorites() {
+        return databaseHandler.showFavorites();
     }
 
     /**
@@ -105,8 +114,8 @@ public class TodoManager {
      * @param category category to be searched with
      * @return HashMap<Sting, TodoItem>
      */
-    public HashMap<String, TodoItem> searchByCategory(String category)  {
-       return databaseHandler.searchByCategory(category);
+    public HashMap<String, TodoItem> searchByCategory(String category) {
+        return databaseHandler.searchByCategory(category);
     }
 
     /**
@@ -115,8 +124,8 @@ public class TodoManager {
      * @param title title to be searched with
      * @return HashMap<String, TodoItem>
      */
-    public HashMap<String, TodoItem> searchByTitle(String title)  {
-      return databaseHandler.searchByTitle(title);
+    public HashMap<String, TodoItem> searchByTitle(String title) {
+        return databaseHandler.searchByTitle(title);
     }
 
     /**
@@ -125,8 +134,8 @@ public class TodoManager {
      * @param title title to toggle its favorite
      * @return boolean if item's favorite has been changed successfully.
      */
-    public boolean toggleFavorite(String title)  {
-         return databaseHandler.toggleFavorite(title);
+    public boolean toggleFavorite(String title) {
+        return databaseHandler.toggleFavorite(title);
     }
 
     /**
@@ -135,7 +144,7 @@ public class TodoManager {
      * @param date date to be searched with
      * @return HashMap<String, TodoItem>
      */
-    public HashMap<String, TodoItem> searchByEndDate(LocalDate date)  {
+    public HashMap<String, TodoItem> searchByEndDate(LocalDate date) {
         return databaseHandler.searchByEndDate(date);
     }
 
@@ -145,7 +154,7 @@ public class TodoManager {
      * @param date date to be searched with
      * @return HashMap<String, TodoItem>
      */
-    public HashMap<String, TodoItem> searchByStartDate(LocalDate date)  {
+    public HashMap<String, TodoItem> searchByStartDate(LocalDate date) {
         return databaseHandler.searchByStartDate(date);
     }
 
@@ -156,7 +165,7 @@ public class TodoManager {
      * @param item     item that will be updated
      * @return updated item if found
      */
-    public TodoItem updateCategory(String category, TodoItem item)  {
-        return databaseHandler.updateCategory(category,item);
+    public TodoItem updateCategory(String category, TodoItem item) {
+        return databaseHandler.updateCategory(category, item);
     }
 }
