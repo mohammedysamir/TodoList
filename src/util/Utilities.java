@@ -147,5 +147,13 @@ public class Utilities {
             System.out.println(map.get(iterator.next()).stringEquivalent());
         }
     }
+
+    public static Priorities mapStringToPriority(String p){
+        if(p.equalsIgnoreCase("Low"))
+            return Priorities.LOW;
+        if(p.equalsIgnoreCase("Medium"))
+            return Priorities.MEDIUM;
+        return Priorities.HIGH;
+    }
 }
 
