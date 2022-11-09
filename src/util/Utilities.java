@@ -122,7 +122,6 @@ public class Utilities {
             if (!categoryList.isCategoryFound(tempCategory))//new category to be added
             {
                 categoryList.addCategory(tempCategory);
-                categoryList.writeCategoriesToFile(); //write to file
             }
             category = tempCategory;
         }

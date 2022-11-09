@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 public class CategoryListHandler {
     DatabaseHandler databaseHandler;
@@ -73,5 +74,9 @@ public class CategoryListHandler {
      */
     public boolean isCategoryFound(String category) {
         return databaseHandler.isCategoryFound(category);
+    }
+
+    public ArrayList<String> getCategories() {
+        return databaseHandler.showCategories();
     }
 }
