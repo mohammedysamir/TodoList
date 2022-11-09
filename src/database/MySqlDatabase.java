@@ -48,7 +48,7 @@ public class MySqlDatabase implements DatabaseHandler {
     @Override
     public boolean insertTodoItem(TodoItem item) {
         //title, description, category,start_date,end_date,priority.toString,is_favorite (bit)
-        String query = "INSERT INTO todo_item VALUES(?,?,?,?,?,?,?,?);";
+        String query = "INSERT INTO todo_item VALUES(?,?,?,?,?,?,?);";
         int rowAffected;
         try {
             //prepare mysql to insert
@@ -71,9 +71,9 @@ public class MySqlDatabase implements DatabaseHandler {
     @Override
     public boolean updateTodoItem(String title, TodoItem item) {
         int rowAffected;
-        String updateQuery = "UPDATE todo_item SET title = ?, description = ?" +
-                "category = ?, start_date = ?, end_date = ?, priority = ?" +
-                "is_favorite = ? WHERE title = ? "; //update data for the given title -old-
+        String updateQuery = "UPDATE todo_item SET title = ?, description = ?," +
+                "category = ?, start_date = ?, end_date = ?, priority = ?," +
+                "is_favorite = ? WHERE title = ? ;"; //update data for the given title -old-
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(updateQuery);
             //updated data -> Set Clause
@@ -116,16 +116,8 @@ public class MySqlDatabase implements DatabaseHandler {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet result = preparedStatement.executeQuery();
             while (result.next()) {
-                String title = result.getString(0);
-                String description = result.getString(1);
-                String category = result.getString(2);
-                LocalDate start_date = result.getDate(3).toLocalDate();
-                LocalDate end_date = result.getDate(4).toLocalDate();
-                Priorities priority = Utilities.mapStringToPriority(result.getString(5));
-                boolean is_favorite = result.getBoolean(6);
-
-                TodoItem item = new TodoItem(title, description, category, start_date, end_date, is_favorite, priority);
-                map.put(title, item);
+                TodoItem item = parseRowToTodo(result);
+                map.put(item.getTitle(), item);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -142,16 +134,8 @@ public class MySqlDatabase implements DatabaseHandler {
             preparedStatement.setString(1, title);
             ResultSet result = preparedStatement.executeQuery();
             while (result.next()) {
-                String title1 = result.getString(0);
-                String description = result.getString(1);
-                String category = result.getString(2);
-                LocalDate start_date = result.getDate(3).toLocalDate();
-                LocalDate end_date = result.getDate(4).toLocalDate();
-                Priorities priority = Utilities.mapStringToPriority(result.getString(5));
-                boolean is_favorite = result.getBoolean(6);
-
-                TodoItem item = new TodoItem(title1, description, category, start_date, end_date, is_favorite, priority);
-                map.put(title, item);
+                TodoItem item = parseRowToTodo(result);
+                map.put(item.getTitle(), item);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -170,16 +154,8 @@ public class MySqlDatabase implements DatabaseHandler {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet result = preparedStatement.executeQuery();
             while (result.next()) {
-                String title = result.getString(0);
-                String description = result.getString(1);
-                String category = result.getString(2);
-                LocalDate start_date = result.getDate(3).toLocalDate();
-                LocalDate end_date = result.getDate(4).toLocalDate();
-                Priorities priority = Utilities.mapStringToPriority(result.getString(5));
-                boolean is_favorite = result.getBoolean(6);
-
-                TodoItem item = new TodoItem(title, description, category, start_date, end_date, is_favorite, priority);
-                items.put(title, item);
+                TodoItem item = parseRowToTodo(result);
+                items.put(item.getTitle(), item);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -195,16 +171,8 @@ public class MySqlDatabase implements DatabaseHandler {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet result = preparedStatement.executeQuery();
             while (result.next()) {
-                String title = result.getString(0);
-                String description = result.getString(1);
-                String category = result.getString(2);
-                LocalDate start_date = result.getDate(3).toLocalDate();
-                LocalDate end_date = result.getDate(4).toLocalDate();
-                Priorities priority = Utilities.mapStringToPriority(result.getString(5));
-                boolean is_favorite = result.getBoolean(6);
-
-                TodoItem item = new TodoItem(title, description, category, start_date, end_date, is_favorite, priority);
-                items.put(title, item);
+                TodoItem item = parseRowToTodo(result);
+                items.put(item.getTitle(), item);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -215,102 +183,74 @@ public class MySqlDatabase implements DatabaseHandler {
 
     @Override
     public HashMap<String, TodoItem> searchByPriority(String priority) {
-        HashMap<String, TodoItem> map = new HashMap<>();
+        HashMap<String, TodoItem> items = new HashMap<>();
         String query = "select * FROM todo_item where priority =?; ";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, priority);
             ResultSet result = preparedStatement.executeQuery();
             while (result.next()) {
-                String title = result.getString(0);
-                String description = result.getString(1);
-                String category = result.getString(2);
-                LocalDate start_date = result.getDate(3).toLocalDate();
-                LocalDate end_date = result.getDate(4).toLocalDate();
-                Priorities priority1 = Utilities.mapStringToPriority(result.getString(5));
-                boolean is_favorite = result.getBoolean(6);
-                TodoItem item = new TodoItem(title, description, category, start_date, end_date, is_favorite, priority1);
-                map.put(title, item);
+                TodoItem item = parseRowToTodo(result);
+                items.put(item.getTitle(), item);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return map;
+        return items;
     }
 
     @Override
     public HashMap<String, TodoItem> searchByCategory(String category) {
-        HashMap<String, TodoItem> map = new HashMap<>();
+        HashMap<String, TodoItem> items = new HashMap<>();
         String query = "select * FROM todo_item where category =?; ";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, category);
             ResultSet result = preparedStatement.executeQuery();
             while (result.next()) {
-                String title = result.getString(0);
-                String description = result.getString(1);
-                String category1 = result.getString(2);
-                LocalDate start_date = result.getDate(3).toLocalDate();
-                LocalDate end_date = result.getDate(4).toLocalDate();
-                Priorities priority1 = Utilities.mapStringToPriority(result.getString(5));
-                boolean is_favorite = result.getBoolean(6);
-                TodoItem item = new TodoItem(title, description, category1, start_date, end_date, is_favorite, priority1);
-                map.put(title, item);
+                TodoItem item = parseRowToTodo(result);
+                items.put(item.getTitle(), item);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return map;
+        return items;
     }
 
     @Override
     public HashMap<String, TodoItem> searchByStartDate(LocalDate date) {
-        HashMap<String, TodoItem> map = new HashMap<>();
+        HashMap<String, TodoItem> items = new HashMap<>();
         String query = "select * FROM todo_item where start_date =?; ";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setDate(1, Date.valueOf(date));
             ResultSet result = preparedStatement.executeQuery();
             while (result.next()) {
-                String title = result.getString(0);
-                String description = result.getString(1);
-                String category1 = result.getString(2);
-                LocalDate start_date = result.getDate(3).toLocalDate();
-                LocalDate end_date = result.getDate(4).toLocalDate();
-                Priorities priority1 = Utilities.mapStringToPriority(result.getString(5));
-                boolean is_favorite = result.getBoolean(6);
-                TodoItem item = new TodoItem(title, description, category1, start_date, end_date, is_favorite, priority1);
-                map.put(title, item);
+                TodoItem item = parseRowToTodo(result);
+                items.put(item.getTitle(), item);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return map;
+        return items;
     }
 
     @Override
     public HashMap<String, TodoItem> searchByEndDate(LocalDate date) {
-        HashMap<String, TodoItem> map = new HashMap<>();
+        HashMap<String, TodoItem> items = new HashMap<>();
         String query = "select * FROM todo_item where end_date =?; ";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setDate(1, Date.valueOf(date));
             ResultSet result = preparedStatement.executeQuery();
             while (result.next()) {
-                String title = result.getString(0);
-                String description = result.getString(1);
-                String category1 = result.getString(2);
-                LocalDate start_date = result.getDate(3).toLocalDate();
-                LocalDate end_date = result.getDate(4).toLocalDate();
-                Priorities priority1 = Utilities.mapStringToPriority(result.getString(5));
-                boolean is_favorite = result.getBoolean(6);
-                TodoItem item = new TodoItem(title, description, category1, start_date, end_date, is_favorite, priority1);
-                map.put(title, item);
+                TodoItem item = parseRowToTodo(result);
+                items.put(item.getTitle(), item);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return map;
+        return items;
     }
 
     @Override
@@ -390,11 +330,32 @@ public class MySqlDatabase implements DatabaseHandler {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, category);
-            if (preparedStatement.executeUpdate() > 0)
-                return true;
+            ResultSet result = preparedStatement.executeQuery();
+            if (result.next()) return true; //result returned with data
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return false;
+    }
+
+    private TodoItem parseRowToTodo(ResultSet result) {
+        String title, description, category;
+        LocalDate start_date, end_date;
+        Priorities priority;
+        boolean is_favorite;
+        try {
+            title = result.getString(1);
+            description = result.getString(2);
+            category = result.getString(3);
+            start_date = result.getDate(4).toLocalDate();
+            end_date = result.getDate(5).toLocalDate();
+            priority = Utilities.mapStringToPriority(result.getString(6));
+            is_favorite = result.getBoolean(7);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return new TodoItem(title, description, category, start_date, end_date, is_favorite, priority);
     }
 }
