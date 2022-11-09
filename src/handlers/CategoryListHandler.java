@@ -1,35 +1,24 @@
 package handlers;
 
 import constants.Constants;
+import database.DatabaseHandler;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class CategoryListHandler {
-    ArrayList<String> categories = new ArrayList<>();
+    DatabaseHandler databaseHandler;
 
     /**
-     * Getter for categories attribute
-     *
-     * @return list of categories
+     * Constructor used to define database handler object and read categories from 'categories' table
      */
-    public ArrayList<String> getCategories() {
-        return categories;
-    }
-
-    /**
-     * Constructor used to define fileHandler object and read categories from 'categories.txt' file
-     *
-     * @throws IOException: handles file's operations
-     */
-    public CategoryListHandler() throws IOException {
-        //open category file
-        FileHandler fileHandler = new FileHandler();
-        //parse categories into Array and set it
-        categories = parseCategories(fileHandler.readFromFile(Constants.categoryFilePath).toString());
+    public CategoryListHandler(DatabaseHandler databaseHandler) {
+        this.databaseHandler = databaseHandler;
+        this.databaseHandler.openConnection();
     }
 
     /**
@@ -38,13 +27,14 @@ public class CategoryListHandler {
      * @param category: category to be inserted into categories list
      */
     public void addCategory(String category) {
-        categories.add(category);
+        databaseHandler.addCategory(category);
     }
 
     /**
      * Used to print categories preceded with index numbers
      */
     public void viewCategories() {
+        ArrayList<String> categories = this.databaseHandler.showCategories();
         if (categories.size() == 0)
             System.out.println("You haven't previously selected categories, let's create one!");
         int index = 1;
@@ -64,39 +54,16 @@ public class CategoryListHandler {
      * @return (String) category
      */
     public String getCategoryAtIndex(int index) {
-        return categories.get(index);
+        return databaseHandler.showCategories().get(index);
     }
 
     /**
-     * Used to determine if a category is found in the list or not
+     * Used to determine if a category is found in the database or not
      *
      * @param category: category to be searched for
      * @return boolean
      */
     public boolean isCategoryFound(String category) {
-        return categories.contains(category);
+        return databaseHandler.isCategoryFound(category);
     }
-
-    /**
-     * Used to parse category list using ',' as delimiter
-     *
-     * @param categoriesString: string represents categories read from the file
-     * @return List of strings (categories)
-     */
-    private ArrayList<String> parseCategories(String categoriesString) {
-        return new ArrayList<>(Arrays.asList(categoriesString.split(",")));
-    }
-
-    /**
-     * Used to write categories list into 'categories.txt' file
-     *
-     * @throws IOException handles file's operations
-     */
-    public void writeCategoriesToFile() throws IOException {
-        StringBuilder result = new StringBuilder();
-        for (String category : categories)
-            result.append(category + ",\n");
-        Files.writeString(Path.of(Constants.categoryFilePath), result.toString());
-    }
-
 }

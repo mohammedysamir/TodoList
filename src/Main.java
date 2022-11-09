@@ -1,8 +1,6 @@
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import database.DatabaseHandler;
 import database.MySqlDatabase;
 import handlers.CategoryListHandler;
-import handlers.FileHandler;
 import handlers.TodoManager;
 import util.Utilities;
 import model.Priorities;
@@ -20,7 +18,7 @@ public class Main {
         String userAnswer = "";
         DatabaseHandler database = new MySqlDatabase("todo_list", "root", "P@ssw0rd"); //DB Object
         TodoManager manager = new TodoManager(database);
-        categoryList = new CategoryListHandler();
+        categoryList = new CategoryListHandler(database);
         String title;
         Scanner scan = new Scanner(System.in);
         boolean exit = false;
