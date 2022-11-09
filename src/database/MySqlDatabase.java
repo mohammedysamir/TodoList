@@ -4,12 +4,11 @@ import model.Priorities;
 import model.TodoItem;
 import util.Utilities;
 
-import javax.imageio.plugins.jpeg.JPEGImageReadParam;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.HashMap;
 
-public class MySqlDatabase implements databaseHandler {
+public class MySqlDatabase implements DatabaseHandler {
     String databaseName;
     String userName;
     String password;
@@ -29,7 +28,7 @@ public class MySqlDatabase implements databaseHandler {
         String connectionString = String.format("jdbc:mysql://localhost:3306/%s", databaseName);
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection(connectionString);
+            connection = DriverManager.getConnection(connectionString,userName,password);//added username and password for DB
             statement = connection.createStatement();
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
@@ -314,18 +313,19 @@ public class MySqlDatabase implements databaseHandler {
     }
 
     @Override
-    public void ToggleFavorite(String title) {
+    public boolean toggleFavorite(String title) {
         String Query = "update todo_item set is_favorite = ? where title= ? ;";
-
+        int rowAffected=0;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(Query);
             preparedStatement.setBoolean(1, !searchByTitle(title).get(title).getFavorite());
             preparedStatement.setString(2, title);
-            preparedStatement.executeUpdate();
+            rowAffected = preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
+        return rowAffected > 0;
     }
 
     @Override
@@ -342,6 +342,7 @@ public class MySqlDatabase implements databaseHandler {
                 System.out.println("Category is updated successfully!");
             } else {
                 System.out.println("Category can't be updated!");
+                return null;
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
