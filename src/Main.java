@@ -1,5 +1,6 @@
+import database.DatabaseHandler;
+import database.MySqlDatabase;
 import handlers.CategoryListHandler;
-import handlers.FileHandler;
 import handlers.TodoManager;
 import util.Utilities;
 import model.Priorities;
@@ -15,8 +16,9 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         String userAnswer = "";
-        TodoManager manager = new TodoManager();
-        categoryList = new CategoryListHandler();
+        DatabaseHandler database = new MySqlDatabase("todo_list", "root", "P@ssw0rd"); //DB Object
+        TodoManager manager = new TodoManager(database);
+        categoryList = new CategoryListHandler(database);
         String title;
         Scanner scan = new Scanner(System.in);
         boolean exit = false;
@@ -52,12 +54,12 @@ public class Main {
                 case 4: //print all todos from TaskManager's map
                     System.out.println("**Fetching all items**");
                     HashMap<String, TodoItem> allTodos = manager.selectAll();
-                    Utilities.printCollection(allTodos, allTodos.size());
+                    Utilities.printCollection(allTodos);
                     break;
                 case 5: //nearest by start date
                     System.out.println("**Fetching items based on Nearest date**");
                     HashMap<String, TodoItem> nearestMap = manager.selectNearestByDate();
-                    Utilities.printCollection(nearestMap, 5);
+                    Utilities.printCollection(nearestMap);
                     break;
                 case 6: //search by title
                     System.out.print("Enter todo item's title to search for: ");
@@ -65,7 +67,7 @@ public class Main {
                     title = scan.nextLine();
                     System.out.println();
                     HashMap<String, TodoItem> titlesMap = manager.searchByTitle(title);
-                    Utilities.printCollection(titlesMap, titlesMap.size());
+                    Utilities.printCollection(titlesMap);
                     break;
                 case 7: //search by start date
                     System.out.print("Enter start date with format 'yyyy-mm-dd': ");
@@ -80,7 +82,7 @@ public class Main {
                     System.out.println();
                     LocalDate date = LocalDate.parse(dateStr);
                     HashMap<String, TodoItem> startDateMap = manager.searchByStartDate(date);
-                    Utilities.printCollection(startDateMap, startDateMap.size());
+                    Utilities.printCollection(startDateMap);
                     break;
                 case 8: //search by end date
                     System.out.print("Enter end date with format 'yyyy-mm-dd': ");
@@ -94,7 +96,7 @@ public class Main {
                     System.out.println();
                     date = LocalDate.parse(dateStr);
                     HashMap<String, TodoItem> endDateMap = manager.searchByEndDate(date);
-                    Utilities.printCollection(endDateMap, endDateMap.size());
+                    Utilities.printCollection(endDateMap);
                     break;
                 case 9: //search by priority
                     System.out.println("Select priority level to search for \n1:LOW\n2:MEDIUM\n3:HIGH");
@@ -103,7 +105,7 @@ public class Main {
                     switch (priorityLevel) {
                         case 1:
                             System.out.println("**Showing items of low priority**");
-                            resultMap = manager.searchByPriority(Priorities.LOW);
+                            resultMap = manager.searchByPriority(Priorities.LOW);//should we take it as Enum or String
                             break;
                         case 2:
                             System.out.println("**Showing items of medium priority**");
@@ -114,7 +116,7 @@ public class Main {
                             resultMap = manager.searchByPriority(Priorities.HIGH);
                             break;
                     }
-                    Utilities.printCollection(resultMap, resultMap.size());
+                    Utilities.printCollection(resultMap);
                     break;
                 case 10: //add to category
                     scan.nextLine();
@@ -132,9 +134,9 @@ public class Main {
                 case 11:
                     System.out.println("Fetching Favorite todo items");
                     HashMap<String, TodoItem> favorites = manager.showFavorites();
-                    Utilities.printCollection(favorites, favorites.size());
+                    Utilities.printCollection(favorites);
                     break;
-                case 12: //add to favorite
+                case 12: //add to favorite what about this one
                     scan.nextLine();
                     System.out.print("Enter item's title to move it to favorite: ");
                     title = scan.nextLine();

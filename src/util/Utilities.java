@@ -122,7 +122,6 @@ public class Utilities {
             if (!categoryList.isCategoryFound(tempCategory))//new category to be added
             {
                 categoryList.addCategory(tempCategory);
-                categoryList.writeCategoriesToFile(); //write to file
             }
             category = tempCategory;
         }
@@ -133,19 +132,27 @@ public class Utilities {
      * used to print HashMap<String, TodoItem> contents
      *
      * @param map:    map to be printed
-     * @param length: define length we will iterate on
      */
-    public static void printCollection(HashMap<String, TodoItem> map, int length) {
+    public static void printCollection(HashMap<String, TodoItem> map) {
         if (map.isEmpty()) {
             System.out.println("No results found, try another predicate!");
             return;
         }
         Iterator<String> iterator = map.keySet().iterator();
+        int length = map.size();
         int counter = 0;
         while (iterator.hasNext() && counter++ < length) {
             System.out.println("-----------------------" + counter + "-----------------------");
             System.out.println(map.get(iterator.next()).stringEquivalent());
         }
+    }
+
+    public static Priorities mapStringToPriority(String p) {
+        if (p.equalsIgnoreCase("Low"))
+            return Priorities.LOW;
+        if (p.equalsIgnoreCase("Medium"))
+            return Priorities.MEDIUM;
+        return Priorities.HIGH;
     }
 }
 
