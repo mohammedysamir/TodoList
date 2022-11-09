@@ -51,7 +51,8 @@ public class FileHandler {
             String json = todo.toString();
             result.append(json);
         }
-        Files.writeString(Path.of(fileLocation), result.toString());
+        //todo: find replacement for java 8
+        //Files.writeString(Path.of(fileLocation), result.toString());
     }
 
 
