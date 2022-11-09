@@ -35,7 +35,6 @@ public class TodoManager {
      *
      * @param item item to be written and inserted
      * @return boolean if item is inserted successfully.
-     * @ handles file's operations
      */
     public boolean insertTodo(TodoItem item)  {
 
@@ -48,7 +47,6 @@ public class TodoManager {
      * @param title item's old title is used to update it
      * @param item  new item's data to be replaced instead of old item's
      * @return boolean: if item is updated successfully
-     * @ handles file's operations
      */
     public boolean updateTodo(String title, TodoItem item)  {
         return databaseHandler.updateTodoItem(title, item);
@@ -59,7 +57,6 @@ public class TodoManager {
      *
      * @param title item's title to be deleted
      * @return boolean if item's deleted successfully
-     * @ handles file's operations
      */
     public boolean deleteTodo(String title)  {
         return databaseHandler.deleteTodoItem(title);
@@ -69,7 +66,6 @@ public class TodoManager {
      * Function is used to return all TodoItem-s
      *
      * @return HashMap<String, TodoItem>
-     * @ handles file's operations
      */
     public HashMap<String, TodoItem> selectAll()  {
        return databaseHandler.getAllItems();
@@ -79,7 +75,6 @@ public class TodoManager {
      * Function is used to sort Map<String, TodoItem> by start date
      *
      * @return sorted HashMap
-     * @ handles file's operations
      */
     public HashMap<String, TodoItem> selectNearestByDate()  {
         return databaseHandler.searchByNearestDate();
@@ -90,7 +85,6 @@ public class TodoManager {
      *
      * @param priority priority to be searched for
      * @return HashMap<String, TodoItem>
-     * @ handles file's operations
      */
     public HashMap<String, TodoItem> searchByPriority(Priorities priority)  {
        return databaseHandler.searchByPriority(priority.toString());
@@ -100,7 +94,6 @@ public class TodoManager {
      * Function is used to fetch all favorite items.
      *
      * @return HashMap<String, TodoItem>
-     * @ handles file's operations
      */
     public HashMap<String, TodoItem> showFavorites()  {
        return databaseHandler.showFavorites();
@@ -111,7 +104,6 @@ public class TodoManager {
      *
      * @param category category to be searched with
      * @return HashMap<Sting, TodoItem>
-     * @ handles file's operations
      */
     public HashMap<String, TodoItem> searchByCategory(String category)  {
        return databaseHandler.searchByCategory(category);
@@ -122,7 +114,6 @@ public class TodoManager {
      *
      * @param title title to be searched with
      * @return HashMap<String, TodoItem>
-     * @ handles file's operations
      */
     public HashMap<String, TodoItem> searchByTitle(String title)  {
       return databaseHandler.searchByTitle(title);
@@ -133,7 +124,6 @@ public class TodoManager {
      *
      * @param title title to toggle its favorite
      * @return boolean if item's favorite has been changed successfully.
-     * @ handles file's operations
      */
     public boolean toggleFavorite(String title)  {
          return databaseHandler.toggleFavorite(title);
@@ -144,7 +134,6 @@ public class TodoManager {
      *
      * @param date date to be searched with
      * @return HashMap<String, TodoItem>
-     * @ handles file's operations
      */
     public HashMap<String, TodoItem> searchByEndDate(LocalDate date)  {
         return databaseHandler.searchByEndDate(date);
@@ -155,7 +144,6 @@ public class TodoManager {
      *
      * @param date date to be searched with
      * @return HashMap<String, TodoItem>
-     * @ handles file's operations
      */
     public HashMap<String, TodoItem> searchByStartDate(LocalDate date)  {
         return databaseHandler.searchByStartDate(date);
@@ -167,7 +155,6 @@ public class TodoManager {
      * @param category new category to be set
      * @param item     item that will be updated
      * @return updated item if found
-     * @ handles file's operations
      */
     public TodoItem updateCategory(String category, TodoItem item)  {
         return databaseHandler.updateCategory(category,item);
