@@ -6,6 +6,7 @@ import util.Utilities;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MySqlDatabase implements DatabaseHandler {
@@ -28,7 +29,7 @@ public class MySqlDatabase implements DatabaseHandler {
         String connectionString = String.format("jdbc:mysql://localhost:3306/%s", databaseName);
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection(connectionString,userName,password);//added username and password for DB
+            connection = DriverManager.getConnection(connectionString, userName, password);//added username and password for DB
             statement = connection.createStatement();
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
@@ -95,9 +96,9 @@ public class MySqlDatabase implements DatabaseHandler {
     @Override
     public boolean deleteTodoItem(String title) {
         int rowAffected = 0;
-        String Query = "DELETE FROM todo_item WHERE title=?; ";
+        String query = "DELETE FROM todo_item WHERE title=?; ";
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Query);
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             //updated data -> Set Clause
             preparedStatement.setString(1, title);
             rowAffected = preparedStatement.executeUpdate();
@@ -110,9 +111,9 @@ public class MySqlDatabase implements DatabaseHandler {
     @Override
     public HashMap<String, TodoItem> getAllItems() {
         HashMap<String, TodoItem> map = new HashMap<>();
-        String Query = "select * FROM todo_item; ";
+        String query = "select * FROM todo_item; ";
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Query);
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet result = preparedStatement.executeQuery();
             while (result.next()) {
                 String title = result.getString(0);
@@ -135,9 +136,9 @@ public class MySqlDatabase implements DatabaseHandler {
     @Override
     public HashMap<String, TodoItem> searchByTitle(String title) {
         HashMap<String, TodoItem> map = new HashMap<>();
-        String Query = "select * FROM todo_item where title =?; ";
+        String query = "select * FROM todo_item where title =?; ";
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Query);
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, title);
             ResultSet result = preparedStatement.executeQuery();
             while (result.next()) {
@@ -215,9 +216,9 @@ public class MySqlDatabase implements DatabaseHandler {
     @Override
     public HashMap<String, TodoItem> searchByPriority(String priority) {
         HashMap<String, TodoItem> map = new HashMap<>();
-        String Query = "select * FROM todo_item where priority =?; ";
+        String query = "select * FROM todo_item where priority =?; ";
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Query);
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, priority);
             ResultSet result = preparedStatement.executeQuery();
             while (result.next()) {
@@ -240,9 +241,9 @@ public class MySqlDatabase implements DatabaseHandler {
     @Override
     public HashMap<String, TodoItem> searchByCategory(String category) {
         HashMap<String, TodoItem> map = new HashMap<>();
-        String Query = "select * FROM todo_item where category =?; ";
+        String query = "select * FROM todo_item where category =?; ";
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Query);
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, category);
             ResultSet result = preparedStatement.executeQuery();
             while (result.next()) {
@@ -265,9 +266,9 @@ public class MySqlDatabase implements DatabaseHandler {
     @Override
     public HashMap<String, TodoItem> searchByStartDate(LocalDate date) {
         HashMap<String, TodoItem> map = new HashMap<>();
-        String Query = "select * FROM todo_item where start_date =?; ";
+        String query = "select * FROM todo_item where start_date =?; ";
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Query);
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setDate(1, Date.valueOf(date));
             ResultSet result = preparedStatement.executeQuery();
             while (result.next()) {
@@ -290,9 +291,9 @@ public class MySqlDatabase implements DatabaseHandler {
     @Override
     public HashMap<String, TodoItem> searchByEndDate(LocalDate date) {
         HashMap<String, TodoItem> map = new HashMap<>();
-        String Query = "select * FROM todo_item where end_date =?; ";
+        String query = "select * FROM todo_item where end_date =?; ";
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Query);
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setDate(1, Date.valueOf(date));
             ResultSet result = preparedStatement.executeQuery();
             while (result.next()) {
@@ -314,10 +315,10 @@ public class MySqlDatabase implements DatabaseHandler {
 
     @Override
     public boolean toggleFavorite(String title) {
-        String Query = "update todo_item set is_favorite = ? where title= ? ;";
-        int rowAffected=0;
+        String query = "update todo_item set is_favorite = ? where title= ? ;";
+        int rowAffected = 0;
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Query);
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setBoolean(1, !searchByTitle(title).get(title).getFavorite());
             preparedStatement.setString(2, title);
             rowAffected = preparedStatement.executeUpdate();
@@ -330,10 +331,10 @@ public class MySqlDatabase implements DatabaseHandler {
 
     @Override
     public TodoItem updateCategory(String category, TodoItem item) {
-        String Query = "update todo_item set category = ? where title= ? ;";
+        String query = "update todo_item set category = ? where title= ? ;";
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(Query);
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, category);
             preparedStatement.setString(2, item.getTitle());
             int row = preparedStatement.executeUpdate();
@@ -348,5 +349,52 @@ public class MySqlDatabase implements DatabaseHandler {
             throw new RuntimeException(e);
         }
         return item;
+    }
+
+    @Override
+    public ArrayList<String> showCategories() {
+        ArrayList<String> categories = new ArrayList<>();
+        String query = "SELECT * FROM categories";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet result = preparedStatement.executeQuery();
+            while (result.next()) {
+                String categoryName = result.getString(2);
+                categories.add(categoryName);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return categories;
+    }
+
+    @Override
+    public void addCategory(String category) {
+        String query = "INSERT INTO categories (category_name) VALUES(?)";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, category);
+            if (preparedStatement.executeUpdate() > 0)
+                System.out.println("New category has been inserted!");
+            else
+                System.err.println("Error: Couldn't insert new category");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean isCategoryFound(String category) {
+        String query = "SELECT * FROM categories WHERE category_name = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, category);
+            if (preparedStatement.executeUpdate() > 0)
+                return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
     }
 }

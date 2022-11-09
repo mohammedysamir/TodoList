@@ -3,6 +3,7 @@ package database;
 import model.TodoItem;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 //Supports strategy pattern
@@ -36,4 +37,11 @@ public interface DatabaseHandler {
     boolean toggleFavorite(String title);
 
     TodoItem updateCategory(String category, TodoItem item);
+
+    ArrayList<String> showCategories();
+
+    void addCategory(String category);
+
+    boolean isCategoryFound(String category);
+
 }
