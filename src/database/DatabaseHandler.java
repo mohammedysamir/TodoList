@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 
 //Supports strategy pattern
-public interface databaseHandler {
+public interface DatabaseHandler {
     void openConnection();
 
     void closeConnection();
@@ -33,7 +33,7 @@ public interface databaseHandler {
 
     HashMap<String, TodoItem> searchByEndDate(LocalDate date);
 
-    void ToggleFavorite(String title);
+    boolean toggleFavorite(String title);
 
     TodoItem updateCategory(String category, TodoItem item);
 }
