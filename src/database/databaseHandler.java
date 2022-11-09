@@ -13,7 +13,7 @@ public interface databaseHandler {
 
     boolean insertTodoItem(TodoItem item);
 
-    boolean updateTodoItem(TodoItem item);
+    boolean updateTodoItem(String title, TodoItem item);
 
     boolean deleteTodoItem(TodoItem item);
 
