@@ -15,7 +15,7 @@ public interface databaseHandler {
 
     boolean updateTodoItem(String title, TodoItem item);
 
-    boolean deleteTodoItem(TodoItem item);
+    boolean deleteTodoItem(String title);
 
     HashMap<String, TodoItem> getAllItems();
 
@@ -33,7 +33,7 @@ public interface databaseHandler {
 
     HashMap<String, TodoItem> searchByEndDate(LocalDate date);
 
-    void ToggleFavorite();
+    void ToggleFavorite(String title);
 
     TodoItem updateCategory(String category, TodoItem item);
 }
