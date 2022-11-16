@@ -7,3 +7,8 @@
 /out/production/TodoList/handlers/TodoManager.class
 /out/production/TodoList/util/Utilities.class
 /apache-tomcat-10.0.27/
+/target/TodoService.war
+/target/classes/controller/TodoController.class
+/target/TodoService/WEB-INF/classes/controller/TodoController.class
+/.idea/dataSources.local.xml
+/target/TodoService/WEB-INF/web.xml
