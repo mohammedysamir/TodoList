@@ -1,0 +1,10 @@
+/home/voidDev/IdeaProjects/TodoList/src/main/java/handlers/TodoManager.java
+/home/voidDev/IdeaProjects/TodoList/src/main/java/constants/Constants.java
+/home/voidDev/IdeaProjects/TodoList/src/main/java/database/DatabaseHandler.java
+/home/voidDev/IdeaProjects/TodoList/src/main/java/handlers/FileHandler.java
+/home/voidDev/IdeaProjects/TodoList/src/main/java/model/Priorities.java
+/home/voidDev/IdeaProjects/TodoList/src/main/java/database/MySqlDatabase.java
+/home/voidDev/IdeaProjects/TodoList/src/main/java/util/Utilities.java
+/home/voidDev/IdeaProjects/TodoList/src/main/java/handlers/CategoryListHandler.java
+/home/voidDev/IdeaProjects/TodoList/src/main/java/model/TodoItem.java
+/home/voidDev/IdeaProjects/TodoList/src/main/java/controller/TodoController.java

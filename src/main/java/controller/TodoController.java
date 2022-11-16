@@ -16,6 +16,7 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.util.Formatter;
 import java.util.HashMap;
 
+@Path("/todo")
 public class TodoController {
     DatabaseHandler database = new MySqlDatabase("todo_list", "root", "P@ssw0rd"); //DB Object
     TodoManager manager = new TodoManager(database);
