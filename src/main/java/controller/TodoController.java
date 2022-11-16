@@ -4,21 +4,76 @@ import database.DatabaseHandler;
 import database.MySqlDatabase;
 import handlers.CategoryListHandler;
 import handlers.TodoManager;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import model.TodoItem;
+
+import javax.print.attribute.standard.Media;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.util.Formatter;
+import java.util.HashMap;
 
 public class TodoController {
     DatabaseHandler database = new MySqlDatabase("todo_list", "root", "P@ssw0rd"); //DB Object
     TodoManager manager = new TodoManager(database);
     CategoryListHandler categoryList = new CategoryListHandler(database);
+
     //Get
+    @GET
+    @Path("/favorites")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response showFavorite() {
+        return Response.status(200).entity(manager.showFavorites()).build();
+    }
 
+    @GET
+    @Path("/search/start-date/{date}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response searchByStartDate(@PathParam("date") String startDate) { //use yyyy-mm-dd format
+        LocalDate date = LocalDate.parse(startDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        if (startDate.length() < 10) { //handle
+            return Response.status(400).entity("Bad date format, use yyyy-mm-dd").build();
+        }
+        return Response.status(200).entity(manager.searchByStartDate(date)).build();
+    }
 
+    @GET
+    @Path("/search/end-date/{date}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response searchByEndDate(@PathParam("date") String endDate) { //use yyyy-mm-dd format
+        LocalDate date = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        if (endDate.length() < 10) { //handle
+            return Response.status(400).entity("Bad date format, use yyyy-mm-dd").build();
+        }
+        return Response.status(200).entity(manager.searchByEndDate(date)).build();
+    }
     //Post
 
 
     //Put
-
+    @PUT
+    @Path("/{title}/favorite")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response toggleFavorite(@PathParam("title") String title) {
+        if (manager.toggleFavorite(title)) //toggled successfully
+            return Response.status(200).entity("Favorite flag is toggled successfully").build();
+        else
+            return Response.status(404).entity("Todo item is not found or can't be toggled").build();
+    }
 
     //Delete
+    @DELETE
+    @Path("/{title}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteTodo(@PathParam("title") String title) {
+        if (manager.deleteTodo(title))
+            return Response.status(200).entity("Todo item is deleted successfully!").build();
+        else
+            return Response.status(404).entity("Todo item is not found or can't be deleted").build();
+    }
 }
 /*
  * Thinking area:
