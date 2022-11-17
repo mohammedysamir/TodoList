@@ -146,9 +146,7 @@ public class MySqlDatabase implements DatabaseHandler {
     @Override
     public HashMap<String, TodoItem> searchByNearestDate() {
         //select * and order by start_date -> Limit 5
-        String query = "SELECT * FROM todo_item" +
-                "ORDER BY start_date ASC" +
-                "LIMIT 5;";
+        String query = "select * from (select * from todo_item order by  start_date asc) todo_item limit 5";
         HashMap<String, TodoItem> items = new HashMap<>();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);

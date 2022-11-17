@@ -43,13 +43,6 @@ public class TodoController {
 
     //Get
     @GET
-    @Path("/hello")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response hello() {
-        return Response.ok("helllo").build();
-    }
-
-    @GET
     @Path("/favorites")
     @Produces(MediaType.APPLICATION_JSON)
     public Response showFavorite() {
@@ -90,7 +83,6 @@ public class TodoController {
     @Path("/search/nearest-date")
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchByNearestDate() {
-
         return Response.status(200).entity(manager.selectNearestByDate()).build();
 
     }
@@ -99,18 +91,14 @@ public class TodoController {
     @Path("/search/category/{category}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchByCategory(@PathParam("category") String category) {
-
         return Response.status(200).entity(manager.searchByCategory(category)).build();
-
     }
 
     @GET
     @Path("/search/title/{title}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchByTitle(@PathParam("title") String title) {
-
         return Response.status(200).entity(manager.searchByTitle(title)).build();
-
     }
     //Post
 
