@@ -1,0 +1,126 @@
+swagger: "2.0"
+info:
+  title: TodoServiceSpec
+  description: Specification for Todo web service
+  version: 1.0.0
+host: www
+schemes:
+  - https
+paths:
+  /todo/favorites:
+    get:
+      summary: "GET favorite todo items"
+      responses:
+        "200":
+          description: "OK"
+
+  /todo/search/category/{category}:
+    get:
+      summary: "GET todo items with specific category"
+      parameters:
+        - name: "category"
+          in: path
+          type: string
+          required: true
+      responses:
+        "200":
+          description: "OK"
+        "404":
+          description: "Category is not found"
+  
+  /todo/search/end-date/{date}:
+    get:
+      summary: "GET todo items that ends with 'date'"
+      parameters:
+        - name: "date"
+          in: path
+          type: string
+          required: true
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad date is inserted, whether the day or the month.
+        Check date is in [1,31], month in [1,12] and Feb has 28 days!!"
+        "404":
+          description: "Date not found"
+  
+  /todo/search/nearest-date:
+    get:
+      summary: "GET 5 nearest todo items ordered by start date"
+      responses:
+        "200":
+          description: "OK"
+  
+  /todo/search/start-date/{date}:
+    get:
+      summary: "GET todo items that starts with 'date'"
+      parameters:
+        - name: "date"
+          in: path
+          type: string
+          required: true
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad date is inserted, whether the day or the month.
+Check date is in [1,31], month in [1,12] and Feb has 28 days!!"
+        "404":
+          description: "Date not found"
+
+  /todo/search/title/{title}:
+    get:
+      summary: "GET todo item with specific title"
+      parameters:
+        - name: "title"
+          in: path
+          type: string
+          required: true
+      responses:
+        "200":
+          description: "OK"
+        "404":
+          description: "Title is not found"
+
+  /todo/{title}:
+    put:
+      summary: "PUT todo item's data"
+      parameters:
+        - name: "title"
+          in: path
+          type: string
+          required: true
+      responses:
+        "200":
+          description: "Item is updated successfully"
+        "404":
+          description: "Item is not found to be changed"
+    delete:
+      summary: "Delete todo item."
+      parameters:
+        - name: "title"
+          in: path
+          type: string
+          required: true
+      responses:
+        "200":
+          description: "Todo item is deleted successfully!"
+        "404":
+          description: "Todo item is not found or can't be deleted"
+
+
+  /todo/{title}/favorite:
+    put:
+      summary: "PUT toggle todo item's favorite flag"
+      parameters:
+        - name: "title"
+          type: string
+          required: true
+          in: path
+      responses:
+        "200":
+          description: "Favorite flag is toggled successfully"
+        "404":
+          description: "Todo item is not found or can't be toggled"
+
