@@ -2,10 +2,12 @@ package handlers;
 
 
 import database.DatabaseHandler;
+import jakarta.ws.rs.core.Response;
 import model.Priorities;
 import model.TodoItem;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -26,6 +28,19 @@ public class TodoManager {
     public TodoManager(DatabaseHandler databaseHandler) {
         this.databaseHandler = databaseHandler;
         this.databaseHandler.openConnection();
+    }
+
+    public Response validateDate(String date) {
+        String[] dateArray = date.split("-");
+        int month = Integer.parseInt(dateArray[1]);
+        int day = Integer.parseInt(dateArray[2]);
+        if (month > 12 || month < 1 || day > 31 || day < 1)
+            return Response.status(400).entity("Bad date is inserted, whether the day or the month.\nCheck date is in [1,31], month in [1,12] and Feb has 28 days!!").build();
+        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        if (!localDate.isLeapYear() && month == 2 && day > 28)
+            return Response.status(400).entity("This is not a leap year, so Feb doesn't have 29th dat").build();
+        else
+            return Response.ok().build();
     }
 
     /**

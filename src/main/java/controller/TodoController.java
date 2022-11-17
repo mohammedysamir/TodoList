@@ -31,8 +31,6 @@ import model.TodoItem;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.util.Formatter;
 import java.util.HashMap;
 
 @Path("/todo")
@@ -53,30 +51,38 @@ public class TodoController {
     @Path("/search/start-date/{date}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response searchByStartDate(@PathParam("date") String startDate) { //use yyyy-mm-dd format
-        LocalDate date = LocalDate.parse(startDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         if (startDate.length() < 10) { //handle
             return Response.status(400).entity("Bad date format, use yyyy-mm-dd").build();
         }
-        HashMap<String, TodoItem> todoItemHashMap = manager.searchByStartDate(date);
-        if (todoItemHashMap.size() > 0)
-            return Response.status(200).entity(todoItemHashMap).build();
-        else
-            return Response.status(404).entity("Date not found").build();
+        Response dateValidationResponse = manager.validateDate(startDate);
+        if (dateValidationResponse.getStatus() == 200) { //validate that date has valid response
+            LocalDate date = LocalDate.parse(startDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            HashMap<String, TodoItem> todoItemHashMap = manager.searchByStartDate(date);
+            if (todoItemHashMap.size() > 0)
+                return Response.status(200).entity(todoItemHashMap).build();
+            else
+                return Response.status(404).entity("Date not found").build();
+        }
+        return dateValidationResponse;
     }
 
     @GET
     @Path("/search/end-date/{date}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response searchByEndDate(@PathParam("date") String endDate) { //use yyyy-mm-dd format
-        LocalDate date = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         if (endDate.length() < 10) { //handle
             return Response.status(400).entity("Bad date format, use yyyy-mm-dd").build();
         }
-        HashMap<String, TodoItem> todoItemHashMap = manager.searchByEndDate(date);
-        if (todoItemHashMap.size() > 0)
-            return Response.status(200).entity(todoItemHashMap).build();
-        else
-            return Response.status(404).entity("Date not found").build();
+        Response dateValidationResponse = manager.validateDate(endDate);
+        if (dateValidationResponse.getStatus() == 200) { //validate that date has valid response
+            LocalDate date = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            HashMap<String, TodoItem> todoItemHashMap = manager.searchByEndDate(date);
+            if (todoItemHashMap.size() > 0)
+                return Response.status(200).entity(todoItemHashMap).build();
+            else
+                return Response.status(404).entity("Date not found").build();
+        }
+        return dateValidationResponse;
     }
 
     @GET
