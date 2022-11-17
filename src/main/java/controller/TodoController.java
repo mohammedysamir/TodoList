@@ -89,6 +89,7 @@ public class TodoController {
     @Path("/search/nearest-date")
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchByNearestDate() {
+
         return Response.status(200).entity(manager.selectNearestByDate()).build();
 
     }
@@ -97,14 +98,23 @@ public class TodoController {
     @Path("/search/category/{category}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchByCategory(@PathParam("category") String category) {
-        return Response.status(200).entity(manager.searchByCategory(category)).build();
+        HashMap<String,TodoItem> todoItemHashMap = manager.selectNearestByDate();
+        if(todoItemHashMap.size() > 0)
+            return Response.status(200).entity(manager.searchByCategory(category)).build();
+        else
+            return Response.status(404).entity("Category is not found").build();
     }
 
     @GET
     @Path("/search/title/{title}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchByTitle(@PathParam("title") String title) {
-        return Response.status(200).entity(manager.searchByTitle(title)).build();
+
+        HashMap<String,TodoItem> todoItemHashMap = manager.selectNearestByDate();
+        if(todoItemHashMap.size() > 0)
+            return Response.status(200).entity(manager.searchByTitle(title)).build();
+        else
+            return Response.status(404).entity("Title is not found").build();
     }
     //Post
 
