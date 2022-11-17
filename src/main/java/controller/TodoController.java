@@ -29,7 +29,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.TodoItem;
 
-import javax.print.attribute.standard.Media;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -88,7 +87,7 @@ public class TodoController {
     }
 
     @GET
-    @Path("/search/nearestdate")
+    @Path("/search/nearest-date")
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchByNearestDate() {
 
