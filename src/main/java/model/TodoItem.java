@@ -1,11 +1,17 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDate;
 
 public class TodoItem {
     String title, description, category;
     LocalDate startDate, endDate;
     Boolean isFavorite;
+
+    public TodoItem() {
+    }
+
     Priorities priority;
 
     public TodoItem(String title, String description, String category, LocalDate startDate, LocalDate endDate, Boolean isFavorite, Priorities priority) {
