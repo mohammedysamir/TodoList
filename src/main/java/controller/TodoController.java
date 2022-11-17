@@ -1,3 +1,23 @@
+/*
+ * Thinking area:
+ *   1. Change controller.TodoController.java to controller.TodoController.
+ *   2. TodoManager is a service now, controller.TodoController will delegate work to TodoManager.
+ *   3. Methods:
+ *    8  3.1. GET: selectAll, selectNearestByDate, searchByPriority, showFavorites, searchByCategory, searchByTitle, searchByEndDate, searchByStartDate
+ *    1  3.2. POST: insertTodo,
+ *    3  3.3. PUT: updateTodo, toggleFavorite, updateCategory
+ *    1  3.4. DELETE: deleteTodo
+ *   4. Response:
+ *       Response.status(code).entity(object).build;
+ *       -> errors: Message enum
+ *      Response.status(404).entity("Todo_ not found").build;
+ *   ----
+ *   13 API endpoint
+ *   ----
+ *   param: title, endDate, startDate,priority ... -> @PathParam
+ *   ex: search by title => /api/todo_/{title} => api/todo_/"first"
+ * */
+
 package controller;
 
 import database.DatabaseHandler;
@@ -23,6 +43,12 @@ public class TodoController {
     CategoryListHandler categoryList = new CategoryListHandler(database);
 
     //Get
+    @GET
+    @Path("/hello")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response hello(){
+       return Response.ok("helllo").build();
+    }
     @GET
     @Path("/favorites")
     @Produces(MediaType.APPLICATION_JSON)
@@ -51,6 +77,33 @@ public class TodoController {
         }
         return Response.status(200).entity(manager.searchByEndDate(date)).build();
     }
+
+    @GET
+    @Path("search/nearestdate")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response searchByNearestDate(){
+
+        return Response.status(200).entity(manager.selectNearestByDate()).build();
+
+    }
+
+    @GET
+    @Path("search/category/{category}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response searchByCategory(@PathParam("category") String category){
+
+        return Response.status(200).entity(manager.searchByCategory(category)).build();
+
+    }
+
+    @GET
+    @Path("search/title/{title}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response searchByTitle(@PathParam("title") String title){
+
+        return Response.status(200).entity(manager.searchByTitle(title)).build();
+
+    }
     //Post
 
 
@@ -65,6 +118,16 @@ public class TodoController {
             return Response.status(404).entity("Todo item is not found or can't be toggled").build();
     }
 
+    @PUT
+    @Path("/updatedtodo/{title}/{item}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateToDo(@PathParam("title") String title, @PathParam("item") TodoItem item){
+        if(manager.updateTodo(title,item))
+            return Response.status(200).entity("Item is updated successfully").build();
+        else
+            return Response.status(404).entity("Item is not found to be changed").build();
+    }
+
     //Delete
     @DELETE
     @Path("/{title}")
@@ -76,22 +139,3 @@ public class TodoController {
             return Response.status(404).entity("Todo item is not found or can't be deleted").build();
     }
 }
-/*
- * Thinking area:
- *   1. Change controller.TodoController.java to controller.TodoController.
- *   2. TodoManager is a service now, controller.TodoController will delegate work to TodoManager.
- *   3. Methods:
- *    8  3.1. GET: selectAll, selectNearestByDate, searchByPriority, showFavorites, searchByCategory, searchByTitle, searchByEndDate, searchByStartDate
- *    1  3.2. POST: insertTodo,
- *    3  3.3. PUT: updateTodo, toggleFavorite, updateCategory
- *    1  3.4. DELETE: deleteTodo
- *   4. Response:
- *       Response.status(code).entity(object).build;
- *       -> errors: Message enum
- *      Response.status(404).entity("Todo_ not found").build;
- *   ----
- *   13 API endpoint
- *   ----
- *   param: title, endDate, startDate,priority ... -> @PathParam
- *   ex: search by title => /api/todo_/{title} => api/todo_/"first"
- * */
