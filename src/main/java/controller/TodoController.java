@@ -79,7 +79,7 @@ public class TodoController {
     }
 
     @GET
-    @Path("search/nearestdate")
+    @Path("/search/nearestdate")
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchByNearestDate(){
 
@@ -88,7 +88,7 @@ public class TodoController {
     }
 
     @GET
-    @Path("search/category/{category}")
+    @Path("/search/category/{category}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchByCategory(@PathParam("category") String category){
 
@@ -97,7 +97,7 @@ public class TodoController {
     }
 
     @GET
-    @Path("search/title/{title}")
+    @Path("/search/title/{title}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchByTitle(@PathParam("title") String title){
 
