@@ -46,9 +46,10 @@ public class TodoController {
     @GET
     @Path("/hello")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response hello(){
-       return Response.ok("helllo").build();
+    public Response hello() {
+        return Response.ok("helllo").build();
     }
+
     @GET
     @Path("/favorites")
     @Produces(MediaType.APPLICATION_JSON)
@@ -64,7 +65,11 @@ public class TodoController {
         if (startDate.length() < 10) { //handle
             return Response.status(400).entity("Bad date format, use yyyy-mm-dd").build();
         }
-        return Response.status(200).entity(manager.searchByStartDate(date)).build();
+        HashMap<String, TodoItem> todoItemHashMap = manager.searchByStartDate(date);
+        if (todoItemHashMap.size() > 0)
+            return Response.status(200).entity(todoItemHashMap).build();
+        else
+            return Response.status(404).entity("Date not found").build();
     }
 
     @GET
@@ -75,13 +80,17 @@ public class TodoController {
         if (endDate.length() < 10) { //handle
             return Response.status(400).entity("Bad date format, use yyyy-mm-dd").build();
         }
-        return Response.status(200).entity(manager.searchByEndDate(date)).build();
+        HashMap<String, TodoItem> todoItemHashMap = manager.searchByEndDate(date);
+        if (todoItemHashMap.size() > 0)
+            return Response.status(200).entity(todoItemHashMap).build();
+        else
+            return Response.status(404).entity("Date not found").build();
     }
 
     @GET
     @Path("/search/nearestdate")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response searchByNearestDate(){
+    public Response searchByNearestDate() {
 
         return Response.status(200).entity(manager.selectNearestByDate()).build();
 
@@ -90,7 +99,7 @@ public class TodoController {
     @GET
     @Path("/search/category/{category}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response searchByCategory(@PathParam("category") String category){
+    public Response searchByCategory(@PathParam("category") String category) {
 
         return Response.status(200).entity(manager.searchByCategory(category)).build();
 
@@ -99,7 +108,7 @@ public class TodoController {
     @GET
     @Path("/search/title/{title}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response searchByTitle(@PathParam("title") String title){
+    public Response searchByTitle(@PathParam("title") String title) {
 
         return Response.status(200).entity(manager.searchByTitle(title)).build();
 
@@ -119,10 +128,10 @@ public class TodoController {
     }
 
     @PUT
-    @Path("/updatedtodo/{title}/{item}")
+    @Path("/{title}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateToDo(@PathParam("title") String title, @PathParam("item") TodoItem item){
-        if(manager.updateTodo(title,item))
+    public Response updateToDo(@PathParam("title") String title, TodoItem item) {
+        if (manager.updateTodo(title, item))
             return Response.status(200).entity("Item is updated successfully").build();
         else
             return Response.status(404).entity("Item is not found to be changed").build();
