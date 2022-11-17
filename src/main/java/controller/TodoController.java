@@ -28,6 +28,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.TodoItem;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -39,33 +40,8 @@ public class TodoController {
     DatabaseHandler database = new MySqlDatabase("todo_list", "root", "P@ssw0rd"); //DB Object
     TodoManager manager = new TodoManager(database);
     CategoryListHandler categoryList = new CategoryListHandler(database);
-    //POST
-
-
-
 
     //Get
-    @GET
-    @Path("/selectAll")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response selectAll(){
-        return Response.status(200).entity(manager.selectAll()).build();
-    }
-
-    @GET
-    @Path("/search/priority")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response SearchByPriority(@PathParam("Priority") model.Priorities priority){
-        return Response.status(200).entity(manager.searchByPriority(priority)).build();
-    }
-
-    @GET
-    @Path("/hello")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response hello() {
-        return Response.ok("helllo").build();
-    }
-
     @GET
     @Path("/favorites")
     @Produces(MediaType.APPLICATION_JSON)
@@ -104,7 +80,7 @@ public class TodoController {
     }
 
     @GET
-    @Path("/search/nearestdate")
+    @Path("/search/nearest-date")
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchByNearestDate() {
 
@@ -116,9 +92,11 @@ public class TodoController {
     @Path("/search/category/{category}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchByCategory(@PathParam("category") String category) {
-
-        return Response.status(200).entity(manager.searchByCategory(category)).build();
-
+        HashMap<String,TodoItem> todoItemHashMap = manager.selectNearestByDate();
+        if(todoItemHashMap.size() > 0)
+            return Response.status(200).entity(manager.searchByCategory(category)).build();
+        else
+            return Response.status(404).entity("Category is not found").build();
     }
 
     @GET
@@ -126,8 +104,11 @@ public class TodoController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchByTitle(@PathParam("title") String title) {
 
-        return Response.status(200).entity(manager.searchByTitle(title)).build();
-
+        HashMap<String,TodoItem> todoItemHashMap = manager.selectNearestByDate();
+        if(todoItemHashMap.size() > 0)
+            return Response.status(200).entity(manager.searchByTitle(title)).build();
+        else
+            return Response.status(404).entity("Title is not found").build();
     }
     //Post
 
@@ -142,14 +123,6 @@ public class TodoController {
         else
             return Response.status(404).entity("Todo item is not found or can't be toggled").build();
     }
-
-    @PUT
-    @Path("/{title}/{category}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response update_category(@PathParam("title") String title){
-        return Response.status(200).entity("updated successfully").build();
-    }
-
 
     @PUT
     @Path("/{title}")
@@ -170,14 +143,5 @@ public class TodoController {
             return Response.status(200).entity("Todo item is deleted successfully!").build();
         else
             return Response.status(404).entity("Todo item is not found or can't be deleted").build();
-    }
-
-    //POST
-    @POST
-    @Path("/add-todo")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response addTodo(@PathParam("item") model.TodoItem item) {
-        manager.insertTodo(item);
-       return Response.status(200).entity("added").build();
     }
 }
