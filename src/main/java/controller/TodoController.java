@@ -191,6 +191,6 @@ public class TodoController {
         if(manager.insertTodo(item)) {
             return Response.status(200).entity(Alerts.get(200)).build();
         }
-            return Response.status(500).entity(Alerts.get(500)).build();
+            return Response.status(400).entity(Alerts.get(400)).build();
     }
 }
