@@ -56,7 +56,7 @@ public class TodoController {
     @Path("/search/priority")
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchByPriority(@PathParam("priority") model.Priorities priority) {
-        return Response.status(200).entity(priority).build();
+        return Response.status(200).entity(manager.searchByPriority(priority)).build();
     }
 
 
