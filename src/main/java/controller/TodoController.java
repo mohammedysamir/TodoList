@@ -177,7 +177,7 @@ public class TodoController {
     @Path("/add-todo-item")
     @Produces(MediaType.APPLICATION_JSON)
 
-    public Response addItem(@PathParam('item') model.TodoItem item){
+    public Response addItem(@PathParam("item") model.TodoItem item){
         if(manager.insertTodo(item)){
             return Response.status(200).entity("todo added .").build();
         }
