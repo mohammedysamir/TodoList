@@ -19,6 +19,7 @@
  * */
 
 package controller;
+
 import database.DatabaseHandler;
 import database.MySqlDatabase;
 import handlers.CategoryListHandler;
@@ -27,6 +28,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.TodoItem;
+import util.Utilities;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -40,7 +42,7 @@ public class TodoController {
     //Alerts
     private static HashMap<Integer, String> Alerts = new HashMap<>();
 
-    private static void TodoController() {
+    public TodoController() {
         Alerts.put(200, "process completed successfully");
         Alerts.put(201, "Item has been created");
         Alerts.put(502, "No items founded");
@@ -51,17 +53,17 @@ public class TodoController {
     @Path("/select-all")
     @Produces(MediaType.APPLICATION_JSON)
     public Response SelectAll() {
-        if(manager.selectAll()!=null){
+        if (manager.selectAll() != null) {
             return Response.status(200).entity(manager.selectAll()).build();
         }
         return Response.status(502).entity(Alerts.get(502)).build();
     }
 
     @GET
-    @Path("/search/priority")
+    @Path("/search/priority/{priority}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response searchByPriority(@PathParam("priority") model.Priorities priority) {
-        return Response.status(200).entity(manager.searchByPriority(priority)).build();
+    public Response searchByPriority(@PathParam("priority") String priority) {
+        return Response.status(200).entity(manager.searchByPriority(Utilities.mapStringToPriority(priority))).build();
     }
 
     //Get
@@ -167,8 +169,9 @@ public class TodoController {
     @PUT
     @Path("/{title}/category/{category}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response UpdateCategory(TodoItem item, @PathParam("category") String category ){
-        return manager.updateCategory(category,item)!=null ? Response.status(200).entity(Alerts.get(200)).build() : Response.status(500).entity(Alerts.get(500)).build();
+    public Response UpdateCategory(@PathParam("title") String title, @PathParam("category") String category) {
+        TodoItem item = manager.searchByTitle(title).get(title);
+        return manager.updateCategory(category, item) != null ? Response.status(200).entity(Alerts.get(200)).build() : Response.status(500).entity(Alerts.get(500)).build();
     }
 
     //Delete
@@ -187,10 +190,10 @@ public class TodoController {
     @Path("/add-todo-item")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addItem(TodoItem item){
-        if(manager.insertTodo(item)) {
-            return Response.status(200).entity(Alerts.get(200)).build();
+    public Response addItem(TodoItem item) {
+        if (manager.insertTodo(item)) {
+            return Response.status(200).entity(item).build();
         }
-            return Response.status(400).entity(Alerts.get(400)).build();
+        return Response.status(400).entity(Alerts.get(400)).build();
     }
 }
