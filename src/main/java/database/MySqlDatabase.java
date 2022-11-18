@@ -38,6 +38,7 @@ public class MySqlDatabase implements DatabaseHandler {
 
     @Override
     public void closeConnection() {
+
         try {
             connection.close();
         } catch (SQLException e) {
@@ -270,7 +271,6 @@ public class MySqlDatabase implements DatabaseHandler {
     @Override
     public TodoItem updateCategory(String category, TodoItem item) {
         String query = "update todo_item set category = ? where title= ? ;";
-
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, category);

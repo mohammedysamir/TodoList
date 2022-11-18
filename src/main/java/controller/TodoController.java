@@ -27,6 +27,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.TodoItem;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -39,17 +40,21 @@ public class TodoController {
     //Alerts
     private static HashMap<Integer, String> Alerts = new HashMap<>();
 
-    private static void AlertMessages(HashMap<Integer, String> map) {
-        map.put(200, "process completed successfully");
-        map.put(201, "Item has been created");
-        map.put(502, "No items founded");
+    private static void TodoController() {
+        Alerts.put(200, "process completed successfully");
+        Alerts.put(201, "Item has been created");
+        Alerts.put(502, "No items founded");
+        Alerts.put(400, "Check your parameters and formatting");
     }
 
     @GET
     @Path("/select-all")
     @Produces(MediaType.APPLICATION_JSON)
     public Response SelectAll() {
-        return Response.status(200).entity(manager.selectAll()).build();
+        if(manager.selectAll()!=null){
+            return Response.status(200).entity(manager.selectAll()).build();
+        }
+        return Response.status(502).entity(Alerts.get(502)).build();
     }
 
     @GET
@@ -59,12 +64,12 @@ public class TodoController {
         return Response.status(200).entity(manager.searchByPriority(priority)).build();
     }
 
-
     //Get
     @GET
     @Path("/favorites")
     @Produces(MediaType.APPLICATION_JSON)
     public Response showFavorite() {
+
         return Response.status(200).entity(manager.showFavorites()).build();
     }
 
@@ -73,7 +78,7 @@ public class TodoController {
     @Produces({MediaType.APPLICATION_JSON})
     public Response searchByStartDate(@PathParam("date") String startDate) { //use yyyy-mm-dd format
         if (startDate.length() < 10) { //handle
-            return Response.status(400).entity("Bad date format, use yyyy-mm-dd").build();
+            return Response.status(400).entity(Alerts.get(400)).build();
         }
         Response dateValidationResponse = manager.validateDate(startDate);
         if (dateValidationResponse.getStatus() == 200) { //validate that date has valid response
@@ -123,7 +128,7 @@ public class TodoController {
         if (todoItemHashMap.size() > 0)
             return Response.status(200).entity(manager.searchByCategory(category)).build();
         else
-            return Response.status(404).entity("Category is not found").build();
+            return Response.status(404).entity(Alerts.get(404)).build();
     }
 
     @GET
@@ -135,10 +140,8 @@ public class TodoController {
         if (todoItemHashMap.size() > 0)
             return Response.status(200).entity(manager.searchByTitle(title)).build();
         else
-            return Response.status(404).entity("Title is not found").build();
+            return Response.status(404).entity(Alerts.get(404)).build();
     }
-    //Post
-
 
     //Put
     @PUT
@@ -146,9 +149,9 @@ public class TodoController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response toggleFavorite(@PathParam("title") String title) {
         if (manager.toggleFavorite(title)) //toggled successfully
-            return Response.status(200).entity("Favorite flag is toggled successfully").build();
+            return Response.status(200).entity(Alerts.get(200)).build();
         else
-            return Response.status(404).entity("Todo item is not found or can't be toggled").build();
+            return Response.status(404).entity(Alerts.get(404)).build();
     }
 
     @PUT
@@ -156,9 +159,16 @@ public class TodoController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateToDo(@PathParam("title") String title, TodoItem item) {
         if (manager.updateTodo(title, item))
-            return Response.status(200).entity("Item is updated successfully").build();
+            return Response.status(200).entity(Alerts.get(200)).build();
         else
-            return Response.status(404).entity("Item is not found to be changed").build();
+            return Response.status(404).entity(Alerts.get(404)).build();
+    }
+
+    @PUT
+    @Path("/{title}/category/{category}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response UpdateCategory(TodoItem item, @PathParam("category") String category ){
+        return manager.updateCategory(category,item)!=null ? Response.status(200).entity(Alerts.get(200)).build() : Response.status(500).entity(Alerts.get(500)).build();
     }
 
     //Delete
@@ -167,23 +177,20 @@ public class TodoController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteTodo(@PathParam("title") String title) {
         if (manager.deleteTodo(title))
-            return Response.status(200).entity("Todo item is deleted successfully!").build();
+            return Response.status(200).entity(Alerts.get(200)).build();
         else
-            return Response.status(404).entity("Todo item is not found or can't be deleted").build();
+            return Response.status(404).entity(Alerts.get(404)).build();
     }
 
     //POST
     @POST
     @Path("/add-todo-item")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-
-    public Response addItem(@PathParam("item") model.TodoItem item){
-        if(manager.insertTodo(item)){
-            return Response.status(200).entity("todo added .").build();
+    public Response addItem(TodoItem item){
+        if(manager.insertTodo(item)) {
+            return Response.status(200).entity(Alerts.get(200)).build();
         }
-        else{
-            return Response.status(500).entity("this todo cannot be added").build();
-        }
-
+            return Response.status(500).entity(Alerts.get(500)).build();
     }
 }

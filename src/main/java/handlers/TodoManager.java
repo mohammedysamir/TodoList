@@ -92,6 +92,7 @@ public class TodoManager {
      * @return HashMap<String, TodoItem>
      */
     public HashMap<String, TodoItem> selectAll() {
+
         return databaseHandler.getAllItems();
     }
 
@@ -175,7 +176,6 @@ public class TodoManager {
 
     /**
      * Function is used to update category of specified item
-     *
      * @param category new category to be set
      * @param item     item that will be updated
      * @return updated item if found
