@@ -16,6 +16,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         String userAnswer = "";
+        //practice Git Clone
         DatabaseHandler database = new MySqlDatabase("todo_list", "root", "P@ssw0rd"); //DB Object
         TodoManager manager = new TodoManager(database);
         categoryList = new CategoryListHandler(database);
